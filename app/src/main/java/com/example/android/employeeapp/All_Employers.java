@@ -45,12 +45,7 @@ public class All_Employers extends AppCompatActivity {
         requestQueue= Volley.newRequestQueue(this);
 
         performretrieval();
-
-
-
-
     }
-
 
     public void performretrieval()
     {

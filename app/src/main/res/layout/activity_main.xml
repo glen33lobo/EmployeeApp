@@ -1,17 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Username"
+        android:textSize="30dp"
+        android:layout_margin="20dp"
+        android:textColor="#375E57"
+        android:id="@+id/uname"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Password"
+        android:password="true"
+        android:textSize="30dp"
+        android:layout_margin="20dp"
+        android:id="@+id/upass"
+        android:textColor="#375E57"/>
 
     <Button
-        android:id="@+id/login_button"
-        android:layout_width="100dp"
+        android:id="@+id/emp_login"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginHorizontal="60dp"
+        android:layout_marginVertical="35dp"
         android:text="login"
+        android:background="#8ABDB4"
+        android:layout_centerInParent="true"
+        />
+
+    <Button
+        android:layout_marginTop="100dp"
+        android:layout_marginHorizontal="30dp"
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Admin login"
+        android:background="@color/colorPrimary"
         android:layout_centerInParent="true"/>
 
-</RelativeLayout>
+</LinearLayout>

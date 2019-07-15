@@ -20,10 +20,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EmpActivities"
-            android:label="Recent Activities"></activity>
-        <activity android:name=".All_Employers"
-            android:label="Employee List"/>
+        <activity android:name=".Employee_Main"></activity>
+        <activity
+            android:name=".EmpActivities"
+            android:label="Recent Activities" />
+        <activity
+            android:name=".All_Employers"
+            android:label="Employee List" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
