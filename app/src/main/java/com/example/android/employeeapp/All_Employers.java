@@ -73,7 +73,7 @@ public class All_Employers extends AppCompatActivity {
                         DESC[i] = obj.getString("DESCRIPTION");
                     }
 
-                    Toast.makeText(All_Employers.this, U_NAME[0]+" "+U_NAME[1], Toast.LENGTH_SHORT).show();
+              //      Toast.makeText(All_Employers.this, U_NAME[0]+" "+U_NAME[1], Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
