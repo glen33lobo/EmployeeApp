@@ -1,5 +1,6 @@
 package com.example.android.employeeapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,8 +52,6 @@ public class All_Employers extends AppCompatActivity {
     }
 
 
-
-
     public void performretrieval()
     {
         String url="http://www.thantrajna.com/sjec_task/Employee_details/Retrive_all_emp.php";
@@ -94,7 +93,7 @@ public class All_Employers extends AppCompatActivity {
 //                Intent i=new Intent(All.this,Sub_Domain_list.class);
 //                i.putExtra("Position",pos);
 //                startActivity(i);
-                        Toast.makeText(All_Employers.this, "Selected", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(All_Employers.this,EmpActivities.class));
                     }
                 });
 
