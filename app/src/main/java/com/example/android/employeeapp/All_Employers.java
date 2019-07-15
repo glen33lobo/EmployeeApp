@@ -34,8 +34,8 @@ public class All_Employers extends AppCompatActivity {
     String U_NAME[]=null;
     String DESC[]=null;
 
-    String[] BRANCH_NAME={"MANOJ","KRIHDNS","ASKKD","dfsd","dfsdv"};
-    String[] Name_logo={"mj","ks","ac","grfer","gerg"};
+    //String[] BRANCH_NAME={"MANOJ","KRIHDNS","ASKKD","dfsd","dfsdv"};
+    //String[] Name_logo={"mj","ks","ac","grfer","gerg"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
