@@ -63,7 +63,6 @@ public class All_Employers extends AppCompatActivity {
                 //JSONObject obj= null;
                 try {
 
-                    Toast.makeText(All_Employers.this, ""+response, Toast.LENGTH_SHORT).show();
                     JSONArray jsonArray=response.getJSONArray("val");
                     ID=new Integer[jsonArray.length()];
                     U_NAME=new String[jsonArray.length()];
