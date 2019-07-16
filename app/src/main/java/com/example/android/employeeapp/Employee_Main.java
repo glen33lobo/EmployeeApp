@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -35,21 +38,28 @@ import java.util.TimerTask;
 public class Employee_Main extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 1;
-    public static final int RESULT_CODE =12 ;
+    public static final int RESULT_CODE =11 ;
     LocationManager locationManager;
-    String lattitude="12.75",longitude="72.89";
+    String lattitude,longitude;
     SharedPreferences sp;
     public static final String MSP1="Login";
-    Button b;
-    String data;
+    Button b,upb;
+    String data,data1;
     RequestQueue requestQueue;
+    EditText editText;
+    Cursor c;
+    SQLiteDatabase db;
+    String description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee__main);
 
         b=(Button)findViewById(R.id.logout);
+        upb=(Button)findViewById(R.id.update_desc);
+        editText=(EditText)findViewById(R.id.Desciption);
         sp=getSharedPreferences(MSP1, Context.MODE_PRIVATE);
+        description=editText.getText().toString();
         requestQueue = Volley.newRequestQueue(Employee_Main.this);
 
         Bundle bundle = getIntent().getExtras();
@@ -62,12 +72,14 @@ public class Employee_Main extends AppCompatActivity {
             buildAlertMessageNoGps();
 
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-           // startMyService();
+            getLocation();
         }
 
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 SharedPreferences.Editor ed1 = sp.edit();
                 ed1.clear();
                 ed1.commit();
@@ -76,6 +88,21 @@ public class Employee_Main extends AppCompatActivity {
                 startActivity(new Intent(Employee_Main.this,MainActivity.class));
 
 
+            }
+        });
+
+        upb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(editText.getText().toString().trim().length() > 0)
+                {
+                    update(data);
+                }
+                else {
+                    Toast.makeText(Employee_Main.this,"Nothing to  update",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -92,6 +119,61 @@ public class Employee_Main extends AppCompatActivity {
 //
 //        startService(intent);
 //    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            AskforPermission();
+
+        } else {
+            double latti,longi;
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            Location location2 = locationManager.getLastKnownLocation(LocationManager. PASSIVE_PROVIDER);
+
+            if (location != null) {
+                latti = location.getLatitude();
+                longi = location.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+                Toast.makeText(this, "Location: "+lattitude+" "+longitude, Toast.LENGTH_SHORT).show();
+
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+            } else  if (location1 != null) {
+                latti = location1.getLatitude();
+                longi = location1.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+
+            } else  if (location2 != null) {
+                latti = location2.getLatitude();
+                longi = location2.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+            }else {
+
+                System.out.println("Unble to Trace your location");
+                // Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+
 
     protected void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(Employee_Main.this);
@@ -131,56 +213,7 @@ public class Employee_Main extends AppCompatActivity {
 
     }
 
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            AskforPermission();
 
-        } else {
-            double latti,longi;
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-            Location location2 = locationManager.getLastKnownLocation(LocationManager. PASSIVE_PROVIDER);
-
-            if (location != null) {
-                latti = location.getLatitude();
-                longi = location.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
-            } else  if (location1 != null) {
-                latti = location1.getLatitude();
-                longi = location1.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
-
-            } else  if (location2 != null) {
-                latti = location2.getLatitude();
-                longi = location2.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
-            }else {
-
-                System.out.println("Unble to Trace your location");
-                // Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
-
-            }
-        }
-    }
 
     public class myreceiver extends ResultReceiver{
 
@@ -241,5 +274,35 @@ public class Employee_Main extends AppCompatActivity {
 
     }
 
+    public void update(final String data)
+    {
+        String url="http://www.thantrajna.com/sjec_task/For_Employers/insert_workmain.php";
+        StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(Employee_Main.this, ""+response, Toast.LENGTH_SHORT).show();
 
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(Employee_Main.this, "Err: " + error, Toast.LENGTH_SHORT).show();
+
+            }
+        })
+        {
+            @Override
+            protected Map<String,String> getParams()
+            {
+                Map<String,String> params=new HashMap<String, String>();
+                params.put("ID",data+"");
+                params.put("LATITUDE",lattitude+"");
+                params.put("LONGITUDE",longitude+"");
+                params.put("DESCRIPTION",description+"");
+                return params;
+            }
+        };
+        requestQueue.add(name);
+
+    }
 }

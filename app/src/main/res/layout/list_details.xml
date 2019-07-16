@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Employee name"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="#D65151"
                 android:textSize="30sp"
                 android:id="@+id/emp_name"/>
 

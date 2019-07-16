@@ -36,9 +36,9 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION = 1;
-    public static final int RESULT_CODE =12 ;
+    public static final int RESULT_CODE =11 ;
     LocationManager locationManager;
-    String lattitude="12.75",longitude="72.89";
+    String lattitude,longitude;
     Button login_btn;
     Button emp_btn;
     TextView user;
@@ -54,31 +54,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        login_btn=(Button)findViewById(R.id.login_button);
-        emp_btn=(Button)findViewById(R.id.emp_login);
-        user=(TextView)findViewById(R.id.uname);
-        pass=(TextView)findViewById(R.id.upass);
+
+        login_btn = (Button) findViewById(R.id.login_button);
+        emp_btn = (Button) findViewById(R.id.emp_login);
+        user = (TextView) findViewById(R.id.uname);
+        pass = (TextView) findViewById(R.id.upass);
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        sp=getSharedPreferences(MSP, Context.MODE_PRIVATE);
-        db=openOrCreateDatabase("Login_Details",MODE_PRIVATE,null);
+        sp = getSharedPreferences(MSP, Context.MODE_PRIVATE);
+        db = openOrCreateDatabase("Login_Details", MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS users(name varchar,pass varchar);");
-
-
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
 
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            startMyService();
+            getLocation();
         }
 
-//        ref.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                             if (response.equals("error")) {
                                 Toast.makeText(MainActivity.this, "Invalid Login", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(MainActivity.this, "res: " + response, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(MainActivity.this, "res: " + response, Toast.LENGTH_SHORT).show();
 
                                 insertlogin(response);
 
@@ -164,10 +157,64 @@ public class MainActivity extends AppCompatActivity {
                 }
         });
 
-
-
-
     }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            AskforPermission();
+
+        } else {
+            double latti,longi;
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            Location location2 = locationManager.getLastKnownLocation(LocationManager. PASSIVE_PROVIDER);
+
+            if (location != null) {
+                latti = location.getLatitude();
+                longi = location.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+                Toast.makeText(this, "Location: "+lattitude+" "+longitude, Toast.LENGTH_SHORT).show();
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+            } else  if (location1 != null) {
+                latti = location1.getLatitude();
+                longi = location1.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+          //      Toast.makeText(this, "Location1: "+lattitude+" "+longitude, Toast.LENGTH_SHORT).show();
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+
+            } else  if (location2 != null) {
+                latti = location2.getLatitude();
+                longi = location2.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+              //  Toast.makeText(this, "Location2: "+lattitude+" "+longitude, Toast.LENGTH_SHORT).show();
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+            }else {
+
+                System.out.println("Unble to Trace your location");
+                // Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+
+
 
     @Override
     protected void onResume() {
@@ -225,59 +272,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void AskforPermission()
     {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
-    }
-
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            AskforPermission();
-
-        } else {
-            double latti,longi;
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-            Location location2 = locationManager.getLastKnownLocation(LocationManager. PASSIVE_PROVIDER);
-
-            if (location != null) {
-                latti = location.getLatitude();
-                longi = location.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
-            } else  if (location1 != null) {
-                latti = location1.getLatitude();
-                longi = location1.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
-
-            } else  if (location2 != null) {
-                latti = location2.getLatitude();
-                longi = location2.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
-            }else {
-
-                System.out.println("Unble to Trace your location");
-                // Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
-
-            }
-        }
     }
 
     public class myreceiver extends ResultReceiver{

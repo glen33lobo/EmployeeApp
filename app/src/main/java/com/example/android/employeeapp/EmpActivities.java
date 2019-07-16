@@ -41,7 +41,7 @@ public class EmpActivities extends AppCompatActivity {
     String latitude[]=null;
     String longitude[]=null;
     RequestQueue requestQueue;
-    int data;
+    int data1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +54,7 @@ public class EmpActivities extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            data = bundle.getInt("id");
-            //Toast.makeText(EmpActivities.this, "Clicked "+data, Toast.LENGTH_SHORT).show();
+            data1 = bundle.getInt("id");
         }
         requestQueue = Volley.newRequestQueue(EmpActivities.this);
         retrievalofdetails();
@@ -66,7 +65,7 @@ public class EmpActivities extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Toast.makeText(EmpActivities.this, "Clicked "+data, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmpActivities.this, "Clicked "+data1, Toast.LENGTH_SHORT).show();
 
                //code for map;
 
@@ -175,7 +174,7 @@ public class EmpActivities extends AppCompatActivity {
             protected Map<String,String> getParams()
             {
                 Map<String,String> params=new HashMap<String, String>();
-                params.put("ID",data+"");
+                params.put("ID",data1+"");
                 return params;
             }
         };
