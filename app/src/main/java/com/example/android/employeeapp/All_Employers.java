@@ -1,6 +1,7 @@
 package com.example.android.employeeapp;
 
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +36,6 @@ public class All_Employers extends AppCompatActivity {
     String U_NAME[]=null;
     String DESC[]=null;
 
-    //String[] BRANCH_NAME={"MANOJ","KRIHDNS","ASKKD","dfsd","dfsdv"};
-    //String[] Name_logo={"mj","ks","ac","grfer","gerg"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +84,11 @@ public class All_Employers extends AppCompatActivity {
                 radapter.setonItemclicklistener(new CustomAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int pos) {
-//                Intent i=new Intent(All.this,Sub_Domain_list.class);
-//                i.putExtra("Position",pos);
-//                startActivity(i);
-                        startActivity(new Intent(All_Employers.this,EmpActivities.class));
+                Intent i=new Intent(All_Employers.this,EmpActivities.class);
+                i.putExtra("id",ID[pos]);
+                       Toast.makeText(All_Employers.this, ""+pos+" "+ID[pos], Toast.LENGTH_SHORT).show();
+                startActivity(i);
+                        //startActivity(new Intent(All_Employers.this,EmpActivities.class));
                     }
                 });
 
@@ -114,21 +114,7 @@ public class All_Employers extends AppCompatActivity {
         };
         requestQueue.add(name);
 
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     public static class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ExampleViewHolder> {
@@ -151,7 +137,6 @@ public class All_Employers extends AppCompatActivity {
         {
             this.names_array=un_array;
             this.desc_array=desc_array;
-
         }
 
         public static class ExampleViewHolder extends RecyclerView.ViewHolder{

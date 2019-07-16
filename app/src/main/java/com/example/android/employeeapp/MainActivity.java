@@ -1,12 +1,23 @@
 package com.example.android.employeeapp;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,6 +35,10 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_LOCATION = 1;
+    public static final int RESULT_CODE =12 ;
+    LocationManager locationManager;
+    String lattitude="12.75",longitude="72.89";
     Button login_btn;
     Button emp_btn;
     TextView user;
@@ -48,6 +63,22 @@ public class MainActivity extends AppCompatActivity {
         db=openOrCreateDatabase("Login_Details",MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE IF NOT EXISTS users(name varchar,pass varchar);");
 
+
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            startMyService();
+        }
+
+//        ref.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +99,10 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(MainActivity.this, "res: " + response, Toast.LENGTH_SHORT).show();
 
-                                //registation
+                                insertlogin(response);
+
+
+                                //registation shared preferance
                                 String nm = user.getText().toString();
                                 String ps = pass.getText().toString();
                                 Cursor c;
@@ -92,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
                                             SharedPreferences.Editor ed = sp.edit();
                                             ed.putString(log, "logged");
                                             ed.commit();
-                                            startActivity(new Intent(MainActivity.this, Employee_Main.class));
+                                            Intent in=new Intent(MainActivity.this,Employee_Main.class);
+                                            in.putExtra("ID2",response);
+                                            startActivity(in);
                                             break;
                                         }
                                         c.moveToNext();
@@ -142,4 +178,171 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void startMyService()
+    {
+//        ServiceClass sc=new ServiceClass(this);
+//        Intent intent=new Intent(this,sc.getClass()/*ServicesClass.class*/);
+        Intent intent=new Intent(MainActivity.this,ServiceClass.class);
+        ResultReceiver r=new myreceiver(null);
+//        intent.putExtra("ID",id);
+//        intent.putExtra("lngg",b);
+        intent.putExtra("receiver",r);
+
+        startService(intent);
+    }
+
+    protected void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Please Turn ON your GPS Connection")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        final AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    public void callforgetlocation() {
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            getLocation();
+        }
+
+    }
+
+    public void AskforPermission()
+    {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
+    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            AskforPermission();
+
+        } else {
+            double latti,longi;
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            Location location2 = locationManager.getLastKnownLocation(LocationManager. PASSIVE_PROVIDER);
+
+            if (location != null) {
+                latti = location.getLatitude();
+                longi = location.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+            } else  if (location1 != null) {
+                latti = location1.getLatitude();
+                longi = location1.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+
+            } else  if (location2 != null) {
+                latti = location2.getLatitude();
+                longi = location2.getLongitude();
+                lattitude = String.valueOf(latti);
+                longitude = String.valueOf(longi);
+
+//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
+//                        + "\n" + "Longitude = " + longitude);
+
+            }else {
+
+                System.out.println("Unble to Trace your location");
+                // Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+    public class myreceiver extends ResultReceiver{
+
+        /**
+         * Create a new ResultReceive to receive results.  Your
+         * {@link #onReceiveResult} method will be called from the thread running
+         * <var>handler</var> if given, or from an arbitrary thread if null.
+         *
+         * @param handler
+         */
+        public myreceiver(Handler handler) {
+            super(handler);
+        }
+
+
+        @Override
+        protected void onReceiveResult(int resultCode, final Bundle resultData) {
+            if (resultCode==RESULT_CODE){
+
+                if(resultData!=null)
+                {
+                    lattitude=resultData.getString("res_lat");
+                    longitude=resultData.getString("res_lng");
+                }
+            }
+        }
+
+    }
+
+    public void insertlogin(final String response)
+    {
+
+//        Toast.makeText(this, "updation", Toast.LENGTH_SHORT).show();
+//        callforgetlocation();
+
+//        Toast.makeText(MainActivity.this, " "+id+" ", Toast.LENGTH_SHORT).show();
+
+//        Toast.makeText(this, "going to start", Toast.LENGTH_SHORT).show();
+        String url="http://www.thantrajna.com/sjec_task/For_Employers/insert_login.php";
+        StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(MainActivity.this, ""+response, Toast.LENGTH_SHORT).show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Err: " + error, Toast.LENGTH_SHORT).show();
+
+            }
+        })
+        {
+            @Override
+            protected Map<String,String> getParams()
+            {
+                Map<String,String> params=new HashMap<String, String>();
+                params.put("ID",response+"");
+                params.put("LATITUDE",lattitude+"");
+                params.put("LONGITUDE",longitude+"");
+                return params;
+            }
+        };
+        requestQueue.add(name);
+
+    }
 }

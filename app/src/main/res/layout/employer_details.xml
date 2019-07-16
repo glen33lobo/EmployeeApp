@@ -33,7 +33,7 @@
         android:text="names"
         android:textSize="15sp"
         android:gravity="center"
-        android:textColor="#0341AD"
+        android:textColor="#BE2929"
         android:id="@+id/descp"/>
 
 </LinearLayout>
