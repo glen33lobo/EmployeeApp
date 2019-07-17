@@ -44,6 +44,7 @@ public class EmpActivities extends AppCompatActivity {
     String longitude[]=null;
     RequestQueue requestQueue;
     Integer data1;
+    int value;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +68,19 @@ public class EmpActivities extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Toast.makeText(EmpActivities.this, "Clicked "+data1, Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(EmpActivities.this, "Clicked "+data1, Toast.LENGTH_SHORT).show();
 
+                int i;
+                for(i=0;i<value;i++)
+                {
+                    if(position==i) {
+                        break;
+                    }
+                }
+                Intent intent=new Intent(EmpActivities.this,MapsActivity.class);
+                intent.putExtra("latid",latitude[i]);
+                intent.putExtra("longid",longitude[i]);
+                startActivity(intent);
                //code for map;
 
 
@@ -162,6 +174,7 @@ public class EmpActivities extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try{
+                            int i;
                         JSONObject jsonObject=new JSONObject(response);
                         JSONArray jsonArray=jsonObject.getJSONArray("val");
                         names=new String[jsonArray.length()];
@@ -169,7 +182,7 @@ public class EmpActivities extends AppCompatActivity {
                         time=new String[jsonArray.length()];
                         latitude=new String[jsonArray.length()];
                         longitude=new String[jsonArray.length()];
-                        for(int i=0;i<jsonArray.length();i++) {
+                        for(i=0;i<jsonArray.length();i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
                             ID[i] = obj.getInt("EMP_ID");
                             latitude[i] = obj.getString("LATITUDE");
@@ -178,6 +191,7 @@ public class EmpActivities extends AppCompatActivity {
                             time[i] = obj.getString("DATE");
                         }
 
+                        value=i+1;
 
                         //  Toast.makeText(EmpActivities.this, names[0]+" "+names[1], Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
@@ -207,5 +221,11 @@ public class EmpActivities extends AppCompatActivity {
     }
 
 
+//    public void maps(View view)
+//    {
+//        Intent i=new Intent(EmpActivities.this,MapsActivity.class);
+//        //i.putExtra("id",ID[pos]);
+//        startActivity(i);
+//    }
 }
 
