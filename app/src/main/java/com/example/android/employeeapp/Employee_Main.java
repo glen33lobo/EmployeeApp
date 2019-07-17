@@ -43,13 +43,12 @@ public class Employee_Main extends AppCompatActivity {
     String lattitude,longitude;
     SharedPreferences sp;
     public static final String MSP1="Login";
-    Button b,upb;
+    Button b,upb,uploadb;
     String data,data1;
     RequestQueue requestQueue;
     EditText editText;
     Cursor c;
     SQLiteDatabase db;
-    String description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +56,9 @@ public class Employee_Main extends AppCompatActivity {
 
         b=(Button)findViewById(R.id.logout);
         upb=(Button)findViewById(R.id.update_desc);
+        uploadb=(Button)findViewById(R.id.upload);
         editText=(EditText)findViewById(R.id.Desciption);
         sp=getSharedPreferences(MSP1, Context.MODE_PRIVATE);
-        description=editText.getText().toString();
         requestQueue = Volley.newRequestQueue(Employee_Main.this);
 
         Bundle bundle = getIntent().getExtras();
@@ -105,6 +104,14 @@ public class Employee_Main extends AppCompatActivity {
                 }
             }
         });
+
+        uploadb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadfile();
+            }
+        });
+
     }
 
 //    public void startMyService()
@@ -294,6 +301,7 @@ public class Employee_Main extends AppCompatActivity {
             @Override
             protected Map<String,String> getParams()
             {
+                String description=editText.getText().toString();
                 Map<String,String> params=new HashMap<String, String>();
                 params.put("ID",data+"");
                 params.put("LATITUDE",lattitude+"");
@@ -303,6 +311,17 @@ public class Employee_Main extends AppCompatActivity {
             }
         };
         requestQueue.add(name);
+
+    }
+
+
+
+
+    public void uploadfile()
+    {
+        Toast.makeText(Employee_Main.this,"Upload Section!",Toast.LENGTH_SHORT).show();
+
+
 
     }
 }
