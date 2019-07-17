@@ -9,7 +9,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -57,13 +59,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(Float.parseFloat(lat), Float.parseFloat(lng));
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Position"));
+        Marker map1=mMap.addMarker(new MarkerOptions().position(sydney).title("Verifying Location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        map1.showInfoWindow();
 
-        lat1="12.78";
-        lng1="70.89";
-        LatLng sydney1 = new LatLng(Float.parseFloat(lat1), Float.parseFloat(lng1));
-        mMap.addMarker(new MarkerOptions().position(sydney1).title("Marker in Position1"));
-
+        lat1="19.78";
+        lng1="60.89";
+        Marker map= mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(Float.parseFloat(lat1), Float.parseFloat(lng1)))
+                .title("Current Location")
+                .snippet("Tracking")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+       // map.showInfoWindow();
     }
 }
+
