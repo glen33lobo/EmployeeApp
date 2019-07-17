@@ -18,11 +18,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -41,7 +43,7 @@ public class EmpActivities extends AppCompatActivity {
     String latitude[]=null;
     String longitude[]=null;
     RequestQueue requestQueue;
-    int data1;
+    Integer data1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,77 +110,99 @@ public class EmpActivities extends AppCompatActivity {
     public void retrievalofdetails()
     {
         String url="http://www.thantrajna.com/sjec_task/Employee_details/Retreive_details.php";
-        JsonObjectRequest name=new JsonObjectRequest( Request.Method.POST,url,null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
+//        StringRequest name=new StringRequest( Request.Method.POST,url, new Response.Listener() {
+//            @Override
+//            public void onResponse(String response) {
+//                Toast.makeText(EmpActivities.this, ""+response, Toast.LENGTH_SHORT).show();
+//                //JSONObject obj= null;
+//                try {
+//                    JSONObject jsonObject=new JSONObject(response);
+//                    JSONArray jsonArray=jsonObject.getJSONArray("val");
+//                    names=new String[jsonArray.length()];
+//                    ID=new Integer[jsonArray.length()];
+//                    time=new String[jsonArray.length()];
+//                    latitude=new String[jsonArray.length()];
+//                    longitude=new String[jsonArray.length()];
+//                    for(int i=0;i<jsonArray.length();i++) {
+//                        JSONObject obj = jsonArray.getJSONObject(i);
+//                        ID[i] = obj.getInt("EMP_ID");
+//                        latitude[i] = obj.getString("LATITUDE");
+//                        longitude[i] = obj.getString("LONGITUDE");
+//                        names[i] = obj.getString("DESCRIPTION");
+//                        time[i] = obj.getString("DATE");
+//                    }
+//
+//
+//                    //  Toast.makeText(EmpActivities.this, names[0]+" "+names[1], Toast.LENGTH_SHORT).show();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                // emp_descpAdaptor adaptor=new emp_descpAdaptor(EmpActivities.this,names,ID,time);
+//                //listView.setAdapter(adaptor);
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Toast.makeText(EmpActivities.this, "Err: " + error, Toast.LENGTH_SHORT).show();
+//
+//            }
+//        })
+//        {@Override
+//            protected Map<String,String> getParams()
+//            {
+//                Map<String,String> params=new HashMap<String, String>();
+//                params.put("id","4");
+//                return params;
+//            }
+//        };
 
-                //JSONObject obj= null;
-                try {
-
-                    JSONArray jsonArray=response.getJSONArray("val");
-                    names=new String[jsonArray.length()];
-                    ID=new Integer[jsonArray.length()];
-                    time=new String[jsonArray.length()];
-                    latitude=new String[jsonArray.length()];
-                    longitude=new String[jsonArray.length()];
-                    for(int i=0;i<jsonArray.length();i++) {
-                        JSONObject obj = jsonArray.getJSONObject(i);
-                        ID[i] = obj.getInt("EMP_ID");
-                        latitude[i] = obj.getString("LATITUDE");
-                        longitude[i] = obj.getString("LONGITUDE");
-                        names[i] = obj.getString("DESCRIPTION");
-                        time[i] = obj.getString("DATE");
-                    }
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                        JSONObject jsonObject=new JSONObject(response);
+                        JSONArray jsonArray=jsonObject.getJSONArray("val");
+                        names=new String[jsonArray.length()];
+                        ID=new Integer[jsonArray.length()];
+                        time=new String[jsonArray.length()];
+                        latitude=new String[jsonArray.length()];
+                        longitude=new String[jsonArray.length()];
+                        for(int i=0;i<jsonArray.length();i++) {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            ID[i] = obj.getInt("EMP_ID");
+                            latitude[i] = obj.getString("LATITUDE");
+                            longitude[i] = obj.getString("LONGITUDE");
+                            names[i] = obj.getString("DESCRIPTION");
+                            time[i] = obj.getString("DATE");
+                        }
 
 
                         //  Toast.makeText(EmpActivities.this, names[0]+" "+names[1], Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                emp_descpAdaptor adaptor=new emp_descpAdaptor(EmpActivities.this,names,ID,time);
-                listView.setAdapter(adaptor);
-
-
-//                recyclerView=(RecyclerView)findViewById(R.id.employers_list);
-//                recyclerView.setHasFixedSize(true);
-//                All_Employers.CustomAdapter radapter=new All_Employers.CustomAdapter(U_NAME,DESC);
-//                RecyclerView.LayoutManager rlayoutmanager=new LinearLayoutManager(All_Employers.this,RecyclerView.VERTICAL,false);
-//                recyclerView.setLayoutManager(rlayoutmanager);
-//                recyclerView.setAdapter(radapter);
-//
-//                radapter.setonItemclicklistener(new All_Employers.CustomAdapter.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(int pos) {
-//                        Intent i=new Intent(All_Employers.this,EmpActivities.class);
-//                        i.putExtra("ID",ID[pos]);
-//                        //    Toast.makeText(All_Employers.this, ""+pos+" "+ID[pos], Toast.LENGTH_SHORT).show();
-//                        startActivity(i);
-//                        //startActivity(new Intent(All_Employers.this,EmpActivities.class));
-//                    }
-//                });
-
-
-
-
-            }
-        }, new Response.ErrorListener() {
+                     emp_descpAdaptor adaptor=new emp_descpAdaptor(EmpActivities.this,names,ID,time);
+                    listView.setAdapter(adaptor);
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(EmpActivities.this, "Err: " + error, Toast.LENGTH_SHORT).show();
 
             }
-        })
-        {
+        }){
             @Override
-            protected Map<String,String> getParams()
+            protected Map<String,String> getParams() throws AuthFailureError
             {
                 Map<String,String> params=new HashMap<String, String>();
-                params.put("ID",data1+"");
+                params.put("id",data1.toString());
                 return params;
             }
         };
-        requestQueue.add(name);
+
+        requestQueue.add(stringRequest);
 
     }
 
