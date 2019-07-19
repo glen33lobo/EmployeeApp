@@ -2,6 +2,7 @@ package com.example.android.employeeapp;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String MSP="Login";
     public static final String log =" ";
     SQLiteDatabase db;
+    ProgressDialog dialog;
     Cursor c;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
         sp = getSharedPreferences(MSP, Context.MODE_PRIVATE);
         db = openOrCreateDatabase("Login_Details", MODE_PRIVATE, null);
+        dialog=new ProgressDialog(MainActivity.this);
+
+        dialog.setTitle("Please Wait");
+        dialog.setMessage("Loading!..");
+
         db.execSQL("CREATE TABLE IF NOT EXISTS users(name varchar,pass varchar);");
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -82,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         emp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dialog.show();
                     String url="http://www.thantrajna.com/sjec_task/For_Employers/Emplogin_check.php";
                     StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                         @Override
@@ -121,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                                             ed.commit();
                                             Intent in=new Intent(MainActivity.this,Employee_Main.class);
                                             in.putExtra("ID2",response);
+                                            dialog.dismiss();
                                             startActivity(in);
                                             break;
                                         }
@@ -139,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                         } }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            dialog.dismiss();
                             Toast.makeText(MainActivity.this, "Err: " + error, Toast.LENGTH_SHORT).show();
 
                         }

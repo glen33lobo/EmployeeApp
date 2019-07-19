@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -49,6 +50,7 @@ public class Employee_Main extends AppCompatActivity {
     EditText editText;
     Cursor c;
     SQLiteDatabase db;
+    ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,10 @@ public class Employee_Main extends AppCompatActivity {
         editText=(EditText)findViewById(R.id.Desciption);
         sp=getSharedPreferences(MSP1, Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(Employee_Main.this);
+        dialog=new ProgressDialog(Employee_Main.this);
+
+        dialog.setTitle("Heading");
+        dialog.setMessage("Message heading");
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
