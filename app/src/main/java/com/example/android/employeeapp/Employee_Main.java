@@ -1,11 +1,7 @@
 package com.example.android.employeeapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +18,12 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,8 +34,6 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Employee_Main extends AppCompatActivity {
 
@@ -50,22 +49,23 @@ public class Employee_Main extends AppCompatActivity {
     EditText editText;
     Cursor c;
     SQLiteDatabase db;
-    ProgressDialog dialog;
+    int flag=1;
+    LinearLayout linearLayout;
+    TextView tv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee__main);
 
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutid);
         b=(Button)findViewById(R.id.logout);
         upb=(Button)findViewById(R.id.update_desc);
         uploadb=(Button)findViewById(R.id.upload);
         editText=(EditText)findViewById(R.id.Desciption);
         sp=getSharedPreferences(MSP1, Context.MODE_PRIVATE);
+        tv=(TextView)findViewById(R.id.loginout);
         requestQueue = Volley.newRequestQueue(Employee_Main.this);
-        dialog=new ProgressDialog(Employee_Main.this);
-
-        dialog.setTitle("Heading");
-        dialog.setMessage("Message heading");
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -90,6 +90,11 @@ public class Employee_Main extends AppCompatActivity {
                 ed1.commit();
                 Toast.makeText(Employee_Main.this,"Successfull Logout",Toast.LENGTH_SHORT).show();
                insertlogout(data);
+
+               MainActivity.SERVICE_RUN=false;
+
+               Intent i=new Intent(getApplicationContext(),ServiceClass.class);
+               stopService(i);
                 startActivity(new Intent(Employee_Main.this,MainActivity.class));
 
 
@@ -118,7 +123,24 @@ public class Employee_Main extends AppCompatActivity {
             }
         });
 
+
+//        startMyService();
     }
+
+
+//    public void startMyService()
+//    {
+////        ServiceClass sc=new ServiceClass(this);
+////        Intent intent=new Intent(this,sc.getClass()/*ServicesClass.class*/);
+//        Toast.makeText(this, ""+data, Toast.LENGTH_SHORT).show();
+//        Intent intent=new Intent(this,ServiceClass.class);
+////        ResultReceiver r=new myreceiver(null);
+//        intent.putExtra("ID",data);
+////        intent.putExtra("lngg",b);
+////        intent.putExtra("receiver",r);
+//
+//        startService(intent);
+//    }
 
 //    public void startMyService()
 //    {
@@ -242,17 +264,17 @@ public class Employee_Main extends AppCompatActivity {
         }
 
 
-        @Override
-        protected void onReceiveResult(int resultCode, final Bundle resultData) {
-            if (resultCode==RESULT_CODE){
-
-                if(resultData!=null)
-                {
-                    lattitude=resultData.getString("res_lat");
-                    longitude=resultData.getString("res_lng");
-                }
-            }
-        }
+//        @Override
+//        protected void onReceiveResult(int resultCode, final Bundle resultData) {
+//            if (resultCode==RESULT_CODE){
+//
+//                if(resultData!=null)
+//                {
+//                    lattitude=resultData.getString("res_lat");
+//                    longitude=resultData.getString("res_lng");
+//                }
+//            }
+//        }
 
     }
 
@@ -332,5 +354,56 @@ public class Employee_Main extends AppCompatActivity {
 
 
 
+    }
+
+    public void loginout(View view)
+    {
+        if(flag==1)
+        {
+            tv.setBackgroundResource(R.mipmap.logout);
+            flag=0;
+            upb.setVisibility(View.INVISIBLE);
+            uploadb.setVisibility(View.INVISIBLE);
+            editText.setVisibility(View.INVISIBLE);
+            linearLayout.setBackgroundResource(R.drawable.loggedout1);
+
+        }
+        else if(flag==0)
+        {
+            final AlertDialog.Builder alert=new AlertDialog.Builder(Employee_Main.this);
+            View mView=getLayoutInflater().inflate(R.layout.custom_dialog,null);
+            final EditText txt_pass=(EditText)mView.findViewById(R.id.password);
+            Button btn_cancel=(Button)mView.findViewById(R.id.btn_cancel);
+            Button btn_ok=(Button)mView.findViewById(R.id.btn_ok);
+
+            alert.setView(mView);
+
+            final  AlertDialog alertDialog=alert.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+
+            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    alertDialog.dismiss();
+                }
+            });
+
+            btn_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(Employee_Main.this, "Done", Toast.LENGTH_SHORT).show();
+                    alertDialog.dismiss();
+
+                    tv.setBackgroundResource(R.mipmap.login);
+                    flag=1;
+                    upb.setVisibility(View.VISIBLE);
+                    uploadb.setVisibility(View.VISIBLE);
+                    editText.setVisibility(View.VISIBLE);
+                }
+            });
+
+            alertDialog.show();
+        }
     }
 }

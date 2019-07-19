@@ -5,8 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Employee_Main">
+    tools:context=".Employee_Main"
+    android:id="@+id/linearLayoutid">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@mipmap/login"
+        android:onClick="loginout"
+        android:id="@+id/loginout"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +37,7 @@
         android:text="extras"
         android:textSize="30dp"
         android:background="#3517"
-        android:layout_marginVertical="150dp"
+        android:layout_marginVertical="120dp"
         android:layout_marginHorizontal="70dp"
         android:id="@+id/upload"/>
 

@@ -2,7 +2,6 @@ package com.example.android.employeeapp;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,9 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.Settings;
@@ -23,6 +19,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -36,6 +35,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    public static boolean SERVICE_RUN=false;
     private static final int REQUEST_LOCATION = 1;
     public static final int RESULT_CODE =11 ;
     LocationManager locationManager;
@@ -49,26 +50,22 @@ public class MainActivity extends AppCompatActivity {
     public static final String MSP="Login";
     public static final String log =" ";
     SQLiteDatabase db;
-    ProgressDialog dialog;
     Cursor c;
+    Handler handler=new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        login_btn = (Button) findViewById(R.id.login_button);
+//        login_btn = (Button) findViewById(R.id.login_button);
         emp_btn = (Button) findViewById(R.id.emp_login);
         user = (TextView) findViewById(R.id.uname);
         pass = (TextView) findViewById(R.id.upass);
         requestQueue = Volley.newRequestQueue(MainActivity.this);
         sp = getSharedPreferences(MSP, Context.MODE_PRIVATE);
         db = openOrCreateDatabase("Login_Details", MODE_PRIVATE, null);
-        dialog=new ProgressDialog(MainActivity.this);
-
-        dialog.setTitle("Please Wait");
-        dialog.setMessage("Loading!..");
-
         db.execSQL("CREATE TABLE IF NOT EXISTS users(name varchar,pass varchar);");
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -79,19 +76,24 @@ public class MainActivity extends AppCompatActivity {
             getLocation();
         }
 
-        login_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent(MainActivity.this,All_Employers.class);
-                startActivity(i);
-            }
-        });
+//        login_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i=new Intent(MainActivity.this,All_Employers.class);
+//                startActivity(i);
+//            }
+//        });
         emp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
-                    String url="http://www.thantrajna.com/sjec_task/For_Employers/Emplogin_check.php";
-                    StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+                if (user.getText().toString().equals("Admin") && pass.getText().toString().equals("admin123")) {
+                    Intent i=new Intent(MainActivity.this,All_Employers.class);
+                    startActivity(i);
+
+                } else {
+                    String url = "http://www.thantrajna.com/sjec_task/For_Employers/Emplogin_check.php";
+                    StringRequest name = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             if (response.equals("error")) {
@@ -126,9 +128,8 @@ public class MainActivity extends AppCompatActivity {
                                             SharedPreferences.Editor ed = sp.edit();
                                             ed.putString(log, "logged");
                                             ed.commit();
-                                            Intent in=new Intent(MainActivity.this,Employee_Main.class);
-                                            in.putExtra("ID2",response);
-                                            dialog.dismiss();
+                                            Intent in = new Intent(MainActivity.this, Employee_Main.class);
+                                            in.putExtra("ID2", response);
                                             startActivity(in);
                                             break;
                                         }
@@ -144,26 +145,25 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                             }
-                        } }, new Response.ErrorListener() {
+                        }
+                    }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            dialog.dismiss();
                             Toast.makeText(MainActivity.this, "Err: " + error, Toast.LENGTH_SHORT).show();
 
                         }
-                    })
-                    {
+                    }) {
                         @Override
-                        protected Map<String,String> getParams()
-                        {
-                            Map<String,String> params=new HashMap<String, String>();
-                            params.put("username",user.getText().toString());
-                            params.put("password",pass.getText().toString());
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("username", user.getText().toString());
+                            params.put("password", pass.getText().toString());
                             return params;
                         }
                     };
                     requestQueue.add(name);
                 }
+            }
         });
 
     }
@@ -234,17 +234,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void startMyService()
+    public void startMyService(String response)
     {
-//        ServiceClass sc=new ServiceClass(this);
-//        Intent intent=new Intent(this,sc.getClass()/*ServicesClass.class*/);
+        Toast.makeText(this, "  hi "+response, Toast.LENGTH_SHORT).show();
         Intent intent=new Intent(MainActivity.this,ServiceClass.class);
+        Toast.makeText(this, "here", Toast.LENGTH_SHORT).show();
+
         ResultReceiver r=new myreceiver(null);
-//        intent.putExtra("ID",id);
-//        intent.putExtra("lngg",b);
         intent.putExtra("receiver",r);
 
+        intent.putExtra("ID",response);
+        Toast.makeText(this, "here 1", Toast.LENGTH_SHORT).show();
+        SERVICE_RUN=true;
         startService(intent);
+        Toast.makeText(this, "here 2", Toast.LENGTH_SHORT).show();
+
     }
 
     protected void buildAlertMessageNoGps() {
@@ -299,17 +303,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        @Override
-        protected void onReceiveResult(int resultCode, final Bundle resultData) {
-            if (resultCode==RESULT_CODE){
-
-                if(resultData!=null)
-                {
-                    lattitude=resultData.getString("res_lat");
-                    longitude=resultData.getString("res_lng");
-                }
-            }
-        }
+//        @Override
+//        protected void onReceiveResult(int resultCode, final Bundle resultData) {
+//            if (resultCode==RESULT_CODE){
+//
+//                if(resultData!=null)
+//                {
+//                    lattitude=resultData.getString("res_lat");
+//                    longitude=resultData.getString("res_lng");
+//                }
+//            }
+//        }
 
     }
 
@@ -326,7 +330,8 @@ public class MainActivity extends AppCompatActivity {
         StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(MainActivity.this, ""+response, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, " hi :"+response, Toast.LENGTH_SHORT).show();
+
 
             }
         }, new Response.ErrorListener() {
@@ -348,6 +353,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         requestQueue.add(name);
-
+        startMyService(response);
     }
 }
