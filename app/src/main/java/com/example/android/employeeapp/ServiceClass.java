@@ -7,9 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -29,7 +30,9 @@ public class ServiceClass extends IntentService {
     String lattitude,longitude;
     RequestQueue requestQueue;
     private Context context;
-    int id;
+    String id;
+    private TimerTask task;
+    Handler mHandler;
 
 
     @Override
@@ -50,25 +53,38 @@ public class ServiceClass extends IntentService {
     {
         super("Sample");
         this.context=context;
+        mHandler = new Handler();
 
 
     }
     @Override
     protected void onHandleIntent(@Nullable final Intent intent) {
 
+//        Toast.makeText(ServiceClass.this, "here  1", Toast.LENGTH_SHORT).show();
+
+        System.out.println("\n\n\n\n\n\n\n\nhere\n\n\n\n\n\n\n\n\n\n\n\n");
+
 //        id=intent.getExtras().getInt("ID");
         requestQueue= Volley.newRequestQueue(this);
-        t.scheduleAtFixedRate(new TimerTask() {
+        mHandler.post(new DisplayToast(this, "Hello World!"));
+
+        t.scheduleAtFixedRate(task=new TimerTask() {
             @Override
             public void run() {
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                ResultReceiver rr=intent.getParcelableExtra("receiver");
-                Bundle b=new Bundle();
-                getLocation();
-                b.putString("res_lat",lattitude);
-                b.putString("res_lng",longitude);
-                rr.send(MainActivity.RESULT_CODE,b);
-//                getLocation();
+                System.out.println("\n\n\n\n\n\n\n\nhere its running\n\n\n\n\n\n\n\n\n\n\n\n");
+
+                if(MainActivity.SERVICE_RUN) {
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    ResultReceiver rr = intent.getParcelableExtra("receiver");
+                    id = intent.getStringExtra("ID");
+                    getLocation();
+                }
+                else
+                {
+                    t.cancel();
+                    t.purge();
+                }
+//
             }
         },0,3000);
 
@@ -130,11 +146,15 @@ public class ServiceClass extends IntentService {
 
     public void performupload()
     {
+//        Toast.makeText(context, "running in bg", Toast.LENGTH_SHORT).show();
+
+        System.out.println("\n\n\n\nservice running\n\n\n\n");
+
 //        String url="http://www.thantrajna.com/sjec_task/insert_loc.php";
 //        StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 //            @Override
 //            public void onResponse(String response) {
-//
+//                Toast.makeText(context, "updated:"+response, Toast.LENGTH_SHORT).show();
 //            }
 //        }, new Response.ErrorListener() {
 //            @Override
@@ -157,4 +177,26 @@ public class ServiceClass extends IntentService {
 //        requestQueue.add(name);
     }
 
+
+//    public static boolean stopService(Intent name) {
+//        // TODO Auto-generated method stub
+//        t.cancel();
+//        task.cancel();
+//        return super.stopService(name);
+//    }
+
+
+    public class DisplayToast implements Runnable {
+        private final Context mContext;
+        String mText;
+
+        public DisplayToast(Context mContext, String text){
+            this.mContext = mContext;
+            mText = text;
+        }
+
+        public void run(){
+            Toast.makeText(mContext, mText, Toast.LENGTH_SHORT).show();
+        }
+    }
 }
