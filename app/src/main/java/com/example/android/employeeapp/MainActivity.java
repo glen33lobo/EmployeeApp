@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        login_btn = (Button) findViewById(R.id.login_button);
+//        login_btn = (Button) findViewById(R.id.login_button);
         emp_btn = (Button) findViewById(R.id.emp_login);
         user = (TextView) findViewById(R.id.uname);
         pass = (TextView) findViewById(R.id.upass);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (user.getText().equals("Admin") && pass.getText().equals("admin123")) {
+                if (user.getText().toString().equals("Admin") && pass.getText().toString().equals("admin123")) {
                     Intent i=new Intent(MainActivity.this,All_Employers.class);
                     startActivity(i);
 

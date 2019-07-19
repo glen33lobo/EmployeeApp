@@ -50,7 +50,7 @@ public class Employee_Main extends AppCompatActivity {
     Cursor c;
     SQLiteDatabase db;
     int flag=1;
-    LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayoutid);
+    LinearLayout linearLayout;
     TextView tv;
 
     @Override
@@ -58,6 +58,7 @@ public class Employee_Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee__main);
 
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutid);
         b=(Button)findViewById(R.id.logout);
         upb=(Button)findViewById(R.id.update_desc);
         uploadb=(Button)findViewById(R.id.upload);
