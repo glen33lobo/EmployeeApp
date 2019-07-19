@@ -14,15 +14,43 @@
         android:layout_width="match_parent"
         android:layout_height="215dp"
         tools:ignore="InvalidId"
-        android:background="#009FEBDA">
+        android:background="#5AFAE7">
 
 
         <TextView
+            android:id="@+id/t1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginBottom="5dp"
+            android:padding="15dp"
             android:text="Login to continue"
+            android:textColor="#000000"
             android:textSize="20sp" />
 
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="51dp"
+            android:layout_above="@id/t1"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="105dp"
+            android:layout_marginBottom="-3dp"
+            android:paddingLeft="15dp"
+            android:text="Welcome Back"
+            android:textColor="#000000"
+            android:textSize="35sp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="122dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_launcher_foreground"
+            />
     </RelativeLayout>
 
     <LinearLayout
