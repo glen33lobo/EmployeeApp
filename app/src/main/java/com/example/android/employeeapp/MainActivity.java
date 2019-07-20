@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String log =" ";
     SQLiteDatabase db;
     Cursor c;
+    String channel;
     ProgressDialog dialog;
     Handler handler=new Handler();
 
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             if (response.equals("error")) {
+                                dialog.dismiss();
                                 Toast.makeText(MainActivity.this, "Invalid Login", Toast.LENGTH_SHORT).show();
                             } else {
                                 //Toast.makeText(MainActivity.this, "res: " + response, Toast.LENGTH_SHORT).show();
@@ -111,16 +113,19 @@ public class MainActivity extends AppCompatActivity {
                                 for (int i = 0; i < c.getCount(); i++) {
                                     String s3 = c.getString(0);
                                     String s4 = c.getString(1);
+                                   // Toast.makeText(MainActivity.this, "result1: " +s3+" "+s4+" "+s5, Toast.LENGTH_SHORT).show();
                                     //login
 
 
                                     try {
                                         if ((s6.matches(s3)) && (s7.matches(s4))) {
                                             SharedPreferences.Editor ed = sp.edit();
-                                            ed.putString(log, "logged");
+                                            ed.putString(log, response+"");
                                             ed.commit();
+                                            channel= (sp.getString(log, ""));
+                                            Toast.makeText(MainActivity.this, channel+" is the resss", Toast.LENGTH_SHORT).show();
                                             Intent in = new Intent(MainActivity.this, Employee_Main.class);
-                                            in.putExtra("ID2", response);
+                                            in.putExtra("ID2", channel);
                                             dialog.dismiss();
                                             startActivity(in);
                                             break;
@@ -196,7 +201,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (sp.contains(log)) {
-            startActivity(new Intent(MainActivity.this,Employee_Main.class));
+            channel= (sp.getString(log, ""));
+            Toast.makeText(MainActivity.this, channel+" is the resss", Toast.LENGTH_SHORT).show();
+            Intent in1 = new Intent(MainActivity.this, Employee_Main.class);
+            in1.putExtra("IDpass", channel);
+            startActivity(in1);
         }
 
     }

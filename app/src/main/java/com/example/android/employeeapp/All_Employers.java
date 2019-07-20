@@ -1,5 +1,6 @@
 package com.example.android.employeeapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class All_Employers extends AppCompatActivity {
     Integer ID[]=null;
     String U_NAME[]=null;
     String DESC[]=null;
+    ProgressDialog dialog;
 
 
     @Override
@@ -42,7 +44,10 @@ public class All_Employers extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_employers);
         requestQueue= Volley.newRequestQueue(this);
-
+        dialog=new ProgressDialog(All_Employers.this);
+        dialog.setTitle("Please Wait");
+        dialog.setMessage("Loading..");
+        dialog.show();
         performretrieval();
     }
 
@@ -69,11 +74,12 @@ public class All_Employers extends AppCompatActivity {
 
               //      Toast.makeText(All_Employers.this, U_NAME[0]+" "+U_NAME[1], Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
+                    dialog.dismiss();
                     e.printStackTrace();
                 }
 
 
-
+                dialog.dismiss();
                 recyclerView=(RecyclerView)findViewById(R.id.employers_list);
                 recyclerView.setHasFixedSize(true);
                 CustomAdapter radapter=new CustomAdapter(U_NAME,DESC);
@@ -99,6 +105,7 @@ public class All_Employers extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                dialog.dismiss();
                 Toast.makeText(All_Employers.this, "Err: " + error, Toast.LENGTH_SHORT).show();
 
             }

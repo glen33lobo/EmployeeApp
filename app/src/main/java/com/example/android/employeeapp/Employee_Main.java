@@ -76,10 +76,13 @@ public class Employee_Main extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             data = bundle.getString("ID2");
-        }else
-        {
-
+            if(data==null) {
+                data = bundle.getString("IDpass");
+            }
         }
+
+
+
 
         Toast.makeText(this, ""+data, Toast.LENGTH_SHORT).show();
         ar=data.split("@");

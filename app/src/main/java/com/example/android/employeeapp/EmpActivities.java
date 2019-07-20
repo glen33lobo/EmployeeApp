@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,10 +46,14 @@ public class EmpActivities extends AppCompatActivity {
     RequestQueue requestQueue;
     Integer data1;
     int value;
+    ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emp_activities);
+        dialog=new ProgressDialog(EmpActivities.this);
+        dialog.setTitle("Please Wait");
+        dialog.setMessage("Loading..");
 
         listView=findViewById(R.id.activity_list);
 //        Intent intent = getIntent();
@@ -60,6 +65,7 @@ public class EmpActivities extends AppCompatActivity {
             data1 = bundle.getInt("id");
         }
         requestQueue = Volley.newRequestQueue(EmpActivities.this);
+        dialog.show();
         retrievalofdetails();
 
 
@@ -195,16 +201,17 @@ public class EmpActivities extends AppCompatActivity {
 
                         //  Toast.makeText(EmpActivities.this, names[0]+" "+names[1], Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
+                            dialog.dismiss();
                         e.printStackTrace();
                     }
-
+                        dialog.dismiss();
                      emp_descpAdaptor adaptor=new emp_descpAdaptor(EmpActivities.this,names,ID,time);
                     listView.setAdapter(adaptor);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                dialog.dismiss();
             }
         }){
             @Override

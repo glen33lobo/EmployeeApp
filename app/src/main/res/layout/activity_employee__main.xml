@@ -11,7 +11,8 @@
     <TextView
         android:layout_width="122dp"
         android:layout_height="wrap_content"
-        android:text="Date"
+        android:text="Date :"
+        android:textStyle="bold"
         android:id="@+id/d1"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="30dp"

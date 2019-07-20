@@ -12,5 +12,6 @@
         android:layout_height="match_parent"
         android:id="@+id/activity_list"
         android:divider="@null"
-        android:dividerHeight="3dp"></ListView>
+        android:dividerHeight="3dp"
+        android:background="#DAECDA"></ListView>
 </LinearLayout>
