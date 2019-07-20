@@ -12,8 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +35,9 @@ import java.util.Map;
 
 public class Employee_Main extends AppCompatActivity {
 
+
+    public static boolean SERVICE_RUN=false;
+
     private static final int REQUEST_LOCATION = 1;
     public static final int RESULT_CODE =11 ;
     LocationManager locationManager;
@@ -51,26 +52,71 @@ public class Employee_Main extends AppCompatActivity {
     SQLiteDatabase db;
     int flag=1;
     LinearLayout linearLayout;
-    TextView tv;
+    Button loginout;
+    TextView datep;
+    int chnger=1;
+    String[] ar;
+    String id,status_of_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee__main);
 
-        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutid);
         b=(Button)findViewById(R.id.logout);
         upb=(Button)findViewById(R.id.update_desc);
         uploadb=(Button)findViewById(R.id.upload);
         editText=(EditText)findViewById(R.id.Desciption);
         sp=getSharedPreferences(MSP1, Context.MODE_PRIVATE);
-        tv=(TextView)findViewById(R.id.loginout);
+        loginout=(Button) findViewById(R.id.loginout);
+        datep=(TextView)findViewById(R.id.dateId);
+
         requestQueue = Volley.newRequestQueue(Employee_Main.this);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             data = bundle.getString("ID2");
+        }else
+        {
+
         }
+
+        Toast.makeText(this, ""+data, Toast.LENGTH_SHORT).show();
+        ar=data.split("@");
+        id=ar[0];
+        status_of_user=ar[1];
+        datep.setText(ar[2]);
+
+        loginout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(status_of_user.equals("Logout")) {
+                    insertlogin(data);
+                    loginout.setBackgroundResource(R.drawable.circle);
+                    loginout.setText("LOGIN");
+                    status_of_user="Login";
+                }
+                else
+                {
+                    insertlogout(id);
+                    loginout.setBackgroundResource(R.drawable.circlered);
+                    loginout.setText("LOGOUT");
+                    status_of_user="Logout";
+                }
+            }
+        });
+
+        if(status_of_user.equals("Login"))
+        {
+            loginout.setBackgroundResource(R.drawable.circle);
+            loginout.setText("LOGIN");
+        }
+        else if(status_of_user.equals("Logout"))
+        {
+            loginout.setBackgroundResource(R.drawable.circlered);
+            loginout.setText("LOGOUT");
+        }
+        Toast.makeText(this, ""+status_of_user, Toast.LENGTH_SHORT).show();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -91,7 +137,7 @@ public class Employee_Main extends AppCompatActivity {
                 Toast.makeText(Employee_Main.this,"Successfull Logout",Toast.LENGTH_SHORT).show();
                insertlogout(data);
 
-               MainActivity.SERVICE_RUN=false;
+               SERVICE_RUN=false;
 
                Intent i=new Intent(getApplicationContext(),ServiceClass.class);
                stopService(i);
@@ -122,38 +168,7 @@ public class Employee_Main extends AppCompatActivity {
                 uploadfile();
             }
         });
-
-
-//        startMyService();
     }
-
-
-//    public void startMyService()
-//    {
-////        ServiceClass sc=new ServiceClass(this);
-////        Intent intent=new Intent(this,sc.getClass()/*ServicesClass.class*/);
-//        Toast.makeText(this, ""+data, Toast.LENGTH_SHORT).show();
-//        Intent intent=new Intent(this,ServiceClass.class);
-////        ResultReceiver r=new myreceiver(null);
-//        intent.putExtra("ID",data);
-////        intent.putExtra("lngg",b);
-////        intent.putExtra("receiver",r);
-//
-//        startService(intent);
-//    }
-
-//    public void startMyService()
-//    {
-////        ServiceClass sc=new ServiceClass(this);
-////        Intent intent=new Intent(this,sc.getClass()/*ServicesClass.class*/);
-//        Intent intent=new Intent(this,ServiceClass.class);
-//        ResultReceiver r=new Employee_Main().myreceiver(null);
-////        intent.putExtra("ID",id);
-////        intent.putExtra("lngg",b);
-//        intent.putExtra("receiver",r);
-//
-//        startService(intent);
-//    }
 
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -177,17 +192,11 @@ public class Employee_Main extends AppCompatActivity {
 
                 Toast.makeText(this, "Location: "+lattitude+" "+longitude, Toast.LENGTH_SHORT).show();
 
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
             } else  if (location1 != null) {
                 latti = location1.getLatitude();
                 longi = location1.getLongitude();
                 lattitude = String.valueOf(latti);
                 longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
 
 
             } else  if (location2 != null) {
@@ -196,19 +205,12 @@ public class Employee_Main extends AppCompatActivity {
                 lattitude = String.valueOf(latti);
                 longitude = String.valueOf(longi);
 
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
             }else {
 
                 System.out.println("Unble to Trace your location");
-                // Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
-
             }
         }
     }
-
-
 
     protected void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(Employee_Main.this);
@@ -245,36 +247,6 @@ public class Employee_Main extends AppCompatActivity {
     public void AskforPermission()
     {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-
-    }
-
-
-
-    public class myreceiver extends ResultReceiver{
-
-        /**
-         * Create a new ResultReceive to receive results.  Your
-         * {@link #onReceiveResult} method will be called from the thread running
-         * <var>handler</var> if given, or from an arbitrary thread if null.
-         *
-         * @param handler
-         */
-        public myreceiver(Handler handler) {
-            super(handler);
-        }
-
-
-//        @Override
-//        protected void onReceiveResult(int resultCode, final Bundle resultData) {
-//            if (resultCode==RESULT_CODE){
-//
-//                if(resultData!=null)
-//                {
-//                    lattitude=resultData.getString("res_lat");
-//                    longitude=resultData.getString("res_lng");
-//                }
-//            }
-//        }
 
     }
 
@@ -360,7 +332,7 @@ public class Employee_Main extends AppCompatActivity {
     {
         if(flag==1)
         {
-            tv.setBackgroundResource(R.mipmap.logout);
+//            tv.setBackgroundResource(R.mipmap.logout);
             flag=0;
             upb.setVisibility(View.INVISIBLE);
             uploadb.setVisibility(View.INVISIBLE);
@@ -370,40 +342,83 @@ public class Employee_Main extends AppCompatActivity {
         }
         else if(flag==0)
         {
-            final AlertDialog.Builder alert=new AlertDialog.Builder(Employee_Main.this);
-            View mView=getLayoutInflater().inflate(R.layout.custom_dialog,null);
-            final EditText txt_pass=(EditText)mView.findViewById(R.id.password);
-            Button btn_cancel=(Button)mView.findViewById(R.id.btn_cancel);
-            Button btn_ok=(Button)mView.findViewById(R.id.btn_ok);
-
-            alert.setView(mView);
-
-            final  AlertDialog alertDialog=alert.create();
-            alertDialog.setCanceledOnTouchOutside(false);
-
-            btn_cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    alertDialog.dismiss();
-                }
-            });
-
-            btn_ok.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(Employee_Main.this, "Done", Toast.LENGTH_SHORT).show();
-                    alertDialog.dismiss();
-
-                    tv.setBackgroundResource(R.mipmap.login);
-                    flag=1;
-                    upb.setVisibility(View.VISIBLE);
-                    uploadb.setVisibility(View.VISIBLE);
-                    editText.setVisibility(View.VISIBLE);
-                }
-            });
-
-            alertDialog.show();
+//            final AlertDialog.Builder alert=new AlertDialog.Builder(Employee_Main.this);
+//            View mView=getLayoutInflater().inflate(R.layout.custom_dialog,null);
+//            final EditText txt_pass=(EditText)mView.findViewById(R.id.password);
+//            Button btn_cancel=(Button)mView.findViewById(R.id.btn_cancel);
+//            Button btn_ok=(Button)mView.findViewById(R.id.btn_ok);
+//
+//            alert.setView(mView);
+//
+//            final  AlertDialog alertDialog=alert.create();
+//            alertDialog.setCanceledOnTouchOutside(false);
+//
+//            btn_cancel.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    alertDialog.dismiss();
+//                }
+//            });
+//
+//            btn_ok.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(Employee_Main.this, "Done", Toast.LENGTH_SHORT).show();
+//                    alertDialog.dismiss();
+//
+//                    tv.setBackgroundResource(R.mipmap.login);
+//                    flag=1;
+//                    upb.setVisibility(View.VISIBLE);
+//                    uploadb.setVisibility(View.VISIBLE);
+//                    editText.setVisibility(View.VISIBLE);
+//                }
+//            });
+//
+//            alertDialog.show();
         }
+    }
+
+
+    public void startMyService(String response)
+    {
+        Intent intent=new Intent(Employee_Main.this,ServiceClass.class);
+//        ResultReceiver r=new myreceiver(null);
+//        intent.putExtra("receiver",r);
+        intent.putExtra("ID",response);
+        SERVICE_RUN=true;
+        startService(intent);
+    }
+
+    public void insertlogin(final String response)
+    {
+        String[] ar=response.split("@");
+        final String id=ar[0];
+        String url="http://www.thantrajna.com/sjec_task/For_Employers/insert_login.php";
+        StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(Employee_Main.this, " hi :"+response, Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(Employee_Main.this, "Err: " + error, Toast.LENGTH_SHORT).show();
+
+            }
+        })
+        {
+            @Override
+            protected Map<String,String> getParams()
+            {
+                Map<String,String> params=new HashMap<String, String>();
+                params.put("ID",id+"");
+                params.put("LATITUDE",lattitude+"");
+                params.put("LONGITUDE",longitude+"");
+                return params;
+            }
+        };
+        requestQueue.add(name);
+        startMyService(id);
     }
 }

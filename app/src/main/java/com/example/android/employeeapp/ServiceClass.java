@@ -9,15 +9,20 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.ResultReceiver;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,12 +64,6 @@ public class ServiceClass extends IntentService {
     }
     @Override
     protected void onHandleIntent(@Nullable final Intent intent) {
-
-//        Toast.makeText(ServiceClass.this, "here  1", Toast.LENGTH_SHORT).show();
-
-        System.out.println("\n\n\n\n\n\n\n\nhere\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//        id=intent.getExtras().getInt("ID");
         requestQueue= Volley.newRequestQueue(this);
         mHandler.post(new DisplayToast(this, "Hello World!"));
 
@@ -73,9 +72,9 @@ public class ServiceClass extends IntentService {
             public void run() {
                 System.out.println("\n\n\n\n\n\n\n\nhere its running\n\n\n\n\n\n\n\n\n\n\n\n");
 
-                if(MainActivity.SERVICE_RUN) {
+                if(Employee_Main.SERVICE_RUN) {
                     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    ResultReceiver rr = intent.getParcelableExtra("receiver");
+//                    ResultReceiver rr = intent.getParcelableExtra("receiver");
                     id = intent.getStringExtra("ID");
                     getLocation();
                 }
@@ -84,7 +83,7 @@ public class ServiceClass extends IntentService {
                     t.cancel();
                     t.purge();
                 }
-//
+
             }
         },0,3000);
 
@@ -95,8 +94,6 @@ public class ServiceClass extends IntentService {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
                 (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-//                MainActivity.AskforPermission();
         } else {
             double latti,longi;
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -111,33 +108,18 @@ public class ServiceClass extends IntentService {
                 lattitude = String.valueOf(latti);
                 longitude = String.valueOf(longi);
 
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
             } else  if (location1 != null) {
                 latti = location1.getLatitude();
                 longi = location1.getLongitude();
                 lattitude = String.valueOf(latti);
                 longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
-
             } else  if (location2 != null) {
                 latti = location2.getLatitude();
                 longi = location2.getLongitude();
                 lattitude = String.valueOf(latti);
                 longitude = String.valueOf(longi);
-
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
             }else{
-
                 System.out.println("Unble to Trace your location");
-                // Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
-
             }
             performupload();
         }
@@ -146,45 +128,33 @@ public class ServiceClass extends IntentService {
 
     public void performupload()
     {
-//        Toast.makeText(context, "running in bg", Toast.LENGTH_SHORT).show();
-
         System.out.println("\n\n\n\nservice running\n\n\n\n");
-
-//        String url="http://www.thantrajna.com/sjec_task/insert_loc.php";
-//        StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
+        String url="http://www.thantrajna.com/sjec_task/For_Employers/Track_loc_upload.php";
+        StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
 //                Toast.makeText(context, "updated:"+response, Toast.LENGTH_SHORT).show();
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 //                Toast.makeText(ServiceClass.this, "Err: " + error, Toast.LENGTH_SHORT).show();
-//
-//            }
-//        })
-//        {
-//            @Override
-//            protected Map<String,String> getParams()
-//            {
-//                Map<String,String> params=new HashMap<String, String>();
-//                params.put("ID",id+"");
-//                params.put("Latitude",lattitude);
-//                params.put("Longitude",longitude);
-//                return params;
-//            }
-//        };
-//        requestQueue.add(name);
+
+            }
+        })
+        {
+            @Override
+            protected Map<String,String> getParams()
+            {
+                Map<String,String> params=new HashMap<String, String>();
+                params.put("ID",id+"");
+                params.put("Latitude",lattitude);
+                params.put("Longitude",longitude);
+                return params;
+            }
+        };
+        requestQueue.add(name);
     }
-
-
-//    public static boolean stopService(Intent name) {
-//        // TODO Auto-generated method stub
-//        t.cancel();
-//        task.cancel();
-//        return super.stopService(name);
-//    }
-
 
     public class DisplayToast implements Runnable {
         private final Context mContext;

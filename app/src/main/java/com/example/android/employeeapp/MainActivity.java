@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
@@ -37,7 +36,6 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
 
-    public static boolean SERVICE_RUN=false;
     private static final int REQUEST_LOCATION = 1;
     public static final int RESULT_CODE =11 ;
     LocationManager locationManager;
@@ -60,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-//        login_btn = (Button) findViewById(R.id.login_button);
         emp_btn = (Button) findViewById(R.id.emp_login);
         user = (TextView) findViewById(R.id.uname);
         pass = (TextView) findViewById(R.id.upass);
@@ -80,14 +76,6 @@ public class MainActivity extends AppCompatActivity {
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             getLocation();
         }
-
-//        login_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i=new Intent(MainActivity.this,All_Employers.class);
-//                startActivity(i);
-//            }
-//        });
         emp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,9 +94,6 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Invalid Login", Toast.LENGTH_SHORT).show();
                             } else {
                                 //Toast.makeText(MainActivity.this, "res: " + response, Toast.LENGTH_SHORT).show();
-
-                                insertlogin(response);
-
 
                                 //registation shared preferance
                                 String nm = user.getText().toString();
@@ -144,12 +129,6 @@ public class MainActivity extends AppCompatActivity {
                                     } catch (Exception e) {
 
                                     }
-
-//                        id=Integer.parseInt(response);
-//                        Intent i=new Intent(MainActivity.this,Sample.class);
-//                        i.putExtra("ID",id);
-//                        startActivity(i);
-
                                 }
                             }
                         }
@@ -197,41 +176,21 @@ public class MainActivity extends AppCompatActivity {
                 longitude = String.valueOf(longi);
 
                 Toast.makeText(this, "Location: "+lattitude+" "+longitude, Toast.LENGTH_SHORT).show();
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
             } else  if (location1 != null) {
                 latti = location1.getLatitude();
                 longi = location1.getLongitude();
                 lattitude = String.valueOf(latti);
                 longitude = String.valueOf(longi);
-
-          //      Toast.makeText(this, "Location1: "+lattitude+" "+longitude, Toast.LENGTH_SHORT).show();
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
-
             } else  if (location2 != null) {
                 latti = location2.getLatitude();
                 longi = location2.getLongitude();
                 lattitude = String.valueOf(latti);
                 longitude = String.valueOf(longi);
-
-              //  Toast.makeText(this, "Location2: "+lattitude+" "+longitude, Toast.LENGTH_SHORT).show();
-//                textView.setText("Your current location is"+ "\n" + "Lattitude = " + lattitude
-//                        + "\n" + "Longitude = " + longitude);
-
             }else {
-
                 System.out.println("Unble to Trace your location");
-                // Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
-
             }
         }
     }
-
-
-
 
     @Override
     protected void onResume() {
@@ -239,23 +198,6 @@ public class MainActivity extends AppCompatActivity {
         if (sp.contains(log)) {
             startActivity(new Intent(MainActivity.this,Employee_Main.class));
         }
-
-    }
-
-    public void startMyService(String response)
-    {
-        Toast.makeText(this, "  hi "+response, Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(MainActivity.this,ServiceClass.class);
-        Toast.makeText(this, "here", Toast.LENGTH_SHORT).show();
-
-        ResultReceiver r=new myreceiver(null);
-        intent.putExtra("receiver",r);
-
-        intent.putExtra("ID",response);
-        Toast.makeText(this, "here 1", Toast.LENGTH_SHORT).show();
-        SERVICE_RUN=true;
-        startService(intent);
-        Toast.makeText(this, "here 2", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -297,70 +239,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public class myreceiver extends ResultReceiver{
-
-        /**
-         * Create a new ResultReceive to receive results.  Your
-         * {@link #onReceiveResult} method will be called from the thread running
-         * <var>handler</var> if given, or from an arbitrary thread if null.
-         *
-         * @param handler
-         */
-        public myreceiver(Handler handler) {
-            super(handler);
-        }
-
-
-//        @Override
-//        protected void onReceiveResult(int resultCode, final Bundle resultData) {
-//            if (resultCode==RESULT_CODE){
-//
-//                if(resultData!=null)
-//                {
-//                    lattitude=resultData.getString("res_lat");
-//                    longitude=resultData.getString("res_lng");
-//                }
-//            }
-//        }
-
-    }
-
-    public void insertlogin(final String response)
-    {
-
-//        Toast.makeText(this, "updation", Toast.LENGTH_SHORT).show();
-//        callforgetlocation();
-
-//        Toast.makeText(MainActivity.this, " "+id+" ", Toast.LENGTH_SHORT).show();
-
-//        Toast.makeText(this, "going to start", Toast.LENGTH_SHORT).show();
-        String url="http://www.thantrajna.com/sjec_task/For_Employers/insert_login.php";
-        StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(MainActivity.this, " hi :"+response, Toast.LENGTH_SHORT).show();
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "Err: " + error, Toast.LENGTH_SHORT).show();
-
-            }
-        })
-        {
-            @Override
-            protected Map<String,String> getParams()
-            {
-                Map<String,String> params=new HashMap<String, String>();
-                params.put("ID",response+"");
-                params.put("LATITUDE",lattitude+"");
-                params.put("LONGITUDE",longitude+"");
-                return params;
-            }
-        };
-        requestQueue.add(name);
-        startMyService(response);
-    }
 }
