@@ -49,7 +49,8 @@
         <activity android:name=".Employee_Main"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:label="My Activities"/>
+            android:label="My Activities"
+            android:theme="@style/AppTheme.NoActionBar1"/>
         <activity
             android:name=".EmpActivities"
             android:label="Recent Activities" />

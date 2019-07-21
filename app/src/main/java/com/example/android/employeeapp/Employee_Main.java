@@ -13,6 +13,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
@@ -55,6 +58,7 @@ public class Employee_Main extends AppCompatActivity {
     int flag=1;
     LinearLayout linearLayout;
     Button loginout;
+    private Toolbar toolbar;
     TextView datep;
     int chnger=1;
     String[] ar;
@@ -65,13 +69,18 @@ public class Employee_Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee__main);
 
-        b=(ImageButton)findViewById(R.id.logout);
+//        b=(ImageButton)findViewById(R.id.logout);
         upb=(Button)findViewById(R.id.update_desc);
         uploadb=(Button)findViewById(R.id.upload);
         editText=(EditText)findViewById(R.id.Desciption);
         sp=getSharedPreferences(MSP1, Context.MODE_PRIVATE);
         loginout=(Button) findViewById(R.id.loginout);
         datep=(TextView)findViewById(R.id.dateId);
+
+        // Attaching the layout to the toolbar object
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        // Setting toolbar as the ActionBar with setSupportActionBar() call
+        setSupportActionBar(toolbar);
 
         requestQueue = Volley.newRequestQueue(Employee_Main.this);
 
@@ -110,6 +119,8 @@ public class Employee_Main extends AppCompatActivity {
 
         }
 
+
+
         loginout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,24 +152,16 @@ public class Employee_Main extends AppCompatActivity {
             getLocation();
         }
 
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                SharedPreferences.Editor ed1 = sp.edit();
-                ed1.clear();
-                ed1.commit();
-                Toast.makeText(Employee_Main.this,"Successfull Logout",Toast.LENGTH_SHORT).show();
-//               insertlogout(data);
-
-               SERVICE_RUN=false;
-
-                startActivity(new Intent(Employee_Main.this,MainActivity.class));
-
-
-            }
-        });
+//        b.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//
+//
+//
+//            }
+//        });
 
         upb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,6 +187,51 @@ public class Employee_Main extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.logout) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(Employee_Main.this);
+            builder.setMessage("Are you sure to Logout Completely")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            SharedPreferences.Editor ed1 = sp.edit();
+                            ed1.clear();
+                            ed1.commit();
+                            Toast.makeText(Employee_Main.this,"Successfull Logout",Toast.LENGTH_SHORT).show();
+//               insertlogout(data);
+
+                            SERVICE_RUN=false;
+
+                            startActivity(new Intent(Employee_Main.this,MainActivity.class));
+                          //  return true;
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
