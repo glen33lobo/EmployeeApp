@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +45,8 @@ public class Employee_Main extends AppCompatActivity {
     String lattitude,longitude;
     SharedPreferences sp;
     public static final String MSP1="Login";
-    Button b,upb,uploadb;
+    Button upb,uploadb;
+    ImageButton b;
     String data,data1;
     RequestQueue requestQueue;
     EditText editText;
@@ -63,7 +65,7 @@ public class Employee_Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee__main);
 
-        b=(Button)findViewById(R.id.logout);
+        b=(ImageButton)findViewById(R.id.logout);
         upb=(Button)findViewById(R.id.update_desc);
         uploadb=(Button)findViewById(R.id.upload);
         editText=(EditText)findViewById(R.id.Desciption);
@@ -78,48 +80,58 @@ public class Employee_Main extends AppCompatActivity {
             data = bundle.getString("ID2");
             if(data==null) {
                 data = bundle.getString("IDpass");
+                ar=data.split("@");
+                id=ar[0];
+                Toast.makeText(this, ""+id, Toast.LENGTH_SHORT).show();
+                checklogin(id);
             }
+            else
+            {
+                Toast.makeText(this, " data "+data, Toast.LENGTH_SHORT).show();
+                ar=data.split("@");
+                id=ar[0];
+                status_of_user=ar[1];
+                datep.setText(ar[2]);
+
+                if(status_of_user.equals("Login"))
+                {
+                    loginout.setBackgroundResource(R.drawable.circle);
+                    loginout.setText("LOGGED\nIN");
+                }
+                else if(status_of_user.equals("Logout"))
+                {
+                    loginout.setBackgroundResource(R.drawable.circlered);
+                    loginout.setText("LOGGOUT");
+                    loginout.setText("LOGGED\nOUT");
+                }
+                Toast.makeText(this, ""+status_of_user, Toast.LENGTH_SHORT).show();
+            }
+
+
         }
-
-
-
-
-        Toast.makeText(this, ""+data, Toast.LENGTH_SHORT).show();
-        ar=data.split("@");
-        id=ar[0];
-        status_of_user=ar[1];
-        datep.setText(ar[2]);
 
         loginout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(status_of_user.equals("Logout")) {
-                    insertlogin(data);
+                    insertlogin(id);
                     loginout.setBackgroundResource(R.drawable.circle);
-                    loginout.setText("LOGIN");
+                    loginout.setText("LOGGED\nIN");
                     status_of_user="Login";
+                    SERVICE_RUN=true;
                 }
                 else
                 {
                     insertlogout(id);
                     loginout.setBackgroundResource(R.drawable.circlered);
-                    loginout.setText("LOGOUT");
+                    loginout.setText("LOGGED\nOUT");
                     status_of_user="Logout";
+                    SERVICE_RUN=false;
                 }
             }
         });
 
-        if(status_of_user.equals("Login"))
-        {
-            loginout.setBackgroundResource(R.drawable.circle);
-            loginout.setText("LOGIN");
-        }
-        else if(status_of_user.equals("Logout"))
-        {
-            loginout.setBackgroundResource(R.drawable.circlered);
-            loginout.setText("LOGOUT");
-        }
-        Toast.makeText(this, ""+status_of_user, Toast.LENGTH_SHORT).show();
+
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -138,13 +150,13 @@ public class Employee_Main extends AppCompatActivity {
                 ed1.clear();
                 ed1.commit();
                 Toast.makeText(Employee_Main.this,"Successfull Logout",Toast.LENGTH_SHORT).show();
-               insertlogout(data);
+//               insertlogout(data);
 
                SERVICE_RUN=false;
 
-               Intent i=new Intent(getApplicationContext(),ServiceClass.class);
-               stopService(i);
-                startActivity(new Intent(Employee_Main.this,MainActivity.class));
+//               Intent i=new Intent(getApplicationContext(),ServiceClass.class);
+//               stopService(i);
+//                startActivity(new Intent(Employee_Main.this,MainActivity.class));
 
 
             }
@@ -172,6 +184,85 @@ public class Employee_Main extends AppCompatActivity {
             }
         });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void checklogin(final String id) {
+        String url = "http://www.thantrajna.com/sjec_task/For_Employers/check_already_login.php";
+        StringRequest name = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String x[]=response.split("@");
+                String status_=x[0];
+                String da=x[1];
+                if(status_.equals("Login"))
+                {
+                    loginout.setBackgroundResource(R.drawable.circle);
+                    loginout.setText("LOGGED\nIN");
+                    status_of_user="Login";
+                }
+                else if(status_.equals("Logout"))
+                {
+                    loginout.setBackgroundResource(R.drawable.circlered);
+                    loginout.setText("LOGGED\nOUT");
+                    status_of_user="Logout";
+                }
+                datep.setText(da);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(Employee_Main.this, "Err: " + error, Toast.LENGTH_SHORT).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("ID", id);
+                return params;
+            }
+        };
+        requestQueue.add(name);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

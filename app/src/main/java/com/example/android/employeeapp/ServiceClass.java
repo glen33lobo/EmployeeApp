@@ -70,18 +70,21 @@ public class ServiceClass extends IntentService {
         t.scheduleAtFixedRate(task=new TimerTask() {
             @Override
             public void run() {
-                System.out.println("\n\n\n\n\n\n\n\nhere its running\n\n\n\n\n\n\n\n\n\n\n\n");
+                System.out.println("\n\n\n\n\n\n\n\nhere its timer\n\n\n\n\n\n\n\n\n\n\n\n");
 
                 if(Employee_Main.SERVICE_RUN) {
                     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//                    ResultReceiver rr = intent.getParcelableExtra("receiver");
                     id = intent.getStringExtra("ID");
                     getLocation();
+                    System.out.println("\n\n\n\n\n\n\n\nhere its running\n\n\n\n\n\n\n\n\n\n\n\n");
+
                 }
                 else
                 {
                     t.cancel();
                     t.purge();
+                    System.out.println("\n\n\n\n\n\n\n\nhere its stopped\n\n\n\n\n\n\n\n\n\n\n\n");
+
                 }
 
             }
@@ -133,13 +136,11 @@ public class ServiceClass extends IntentService {
         StringRequest name=new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-//                Toast.makeText(context, "updated:"+response, Toast.LENGTH_SHORT).show();
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(ServiceClass.this, "Err: " + error, Toast.LENGTH_SHORT).show();
-
             }
         })
         {
