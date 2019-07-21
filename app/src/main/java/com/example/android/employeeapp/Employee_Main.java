@@ -154,6 +154,9 @@ public class Employee_Main extends AppCompatActivity {
 
                SERVICE_RUN=false;
 
+                startActivity(new Intent(Employee_Main.this,MainActivity.class));
+
+
             }
         });
 
