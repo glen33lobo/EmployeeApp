@@ -69,7 +69,7 @@ public class Employee_Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee__main);
 
-//        b=(ImageButton)findViewById(R.id.logout);
+
         upb=(Button)findViewById(R.id.update_desc);
         uploadb=(Button)findViewById(R.id.upload);
         editText=(EditText)findViewById(R.id.Desciption);
@@ -212,7 +212,6 @@ public class Employee_Main extends AppCompatActivity {
                             ed1.clear();
                             ed1.commit();
                             Toast.makeText(Employee_Main.this,"Successfull Logout",Toast.LENGTH_SHORT).show();
-//               insertlogout(data);
 
                             SERVICE_RUN=false;
 
