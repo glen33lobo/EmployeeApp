@@ -47,6 +47,7 @@ public class ServiceClass extends IntentService {
     Handler mHandler;
     FusedLocationProviderClient mFusedLocationClient;
     Boolean run=false;
+    ResultReceiver rr;
 
 
     @Override
@@ -100,16 +101,16 @@ public class ServiceClass extends IntentService {
                     System.out.println("srvicing");
 
                     super.onLocationResult(locationResult);
-                    lattitude = locationResult.getLastLocation().getLatitude() + "";
-                    longitude = locationResult.getLastLocation().getLongitude() + "";
-                    id = intent.getStringExtra("ID");
-                    performupload();
-                    ResultReceiver rr = intent.getParcelableExtra("receiver");
-
-                    Bundle b = new Bundle();
-                    b.putString("lat", lattitude);
-                    b.putString("lng", longitude);
-                    rr.send(Employee_Main.RESULT_CODE, b);
+//                    lattitude = locationResult.getLastLocation().getLatitude() + "";
+//                    longitude = locationResult.getLastLocation().getLongitude() + "";
+//                    id = intent.getStringExtra("ID");
+//                    performupload();
+//                    ResultReceiver rr = intent.getParcelableExtra("receiver");
+//
+//                    Bundle b = new Bundle();
+//                    b.putString("lat", lattitude);
+//                    b.putString("lng", longitude);
+//                    rr.send(Employee_Main.RESULT_CODE, b);
                 }
             }, getMainLooper());
         }else
@@ -125,9 +126,14 @@ public class ServiceClass extends IntentService {
                 if(Employee_Main.SERVICE_RUN) {
                     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     id = intent.getStringExtra("ID");
+                    rr = intent.getParcelableExtra("receiver");
                     getLocation();
                     System.out.println("\n\n\n\n\n\n\n\nhere its running\n\n\n\n\n\n\n\n\n\n\n\n");
 
+                    Bundle b = new Bundle();
+                    b.putString("lat", lattitude);
+                    b.putString("lng", longitude);
+                    rr.send(Employee_Main.RESULT_CODE, b);
                 }
                 else
                 {
