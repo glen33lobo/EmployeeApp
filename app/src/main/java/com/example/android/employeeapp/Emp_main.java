@@ -33,7 +33,10 @@ public class Emp_main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emp_main);
-        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),);
+        String id=getIntent().getExtras().getString("ID2");
+        if(id==null)
+            id=getIntent().getExtras().getString("IDpass");
+        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),id);
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         tabLayout = findViewById(R.id.tabs);

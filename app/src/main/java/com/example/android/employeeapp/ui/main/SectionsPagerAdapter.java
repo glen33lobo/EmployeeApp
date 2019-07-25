@@ -24,9 +24,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private final Context mContext;
 
     Bundle bundle;
-    int id;
+    String id;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm,id) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm,String id) {
         super(fm);
         mContext = context;
         bundle=new Bundle();
@@ -47,6 +47,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return e1;
             case 1:
                 Emp_upload e2=new Emp_upload();
+                bundle.putString("id", String.valueOf(id));
+                e2.setArguments(bundle);
                 return e2;
                 default:return null;
         }

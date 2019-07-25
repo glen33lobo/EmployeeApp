@@ -87,9 +87,15 @@ public class Emp_upload extends Fragment {
                 //   Toast.makeText(EmpActivities.this, "Clicked "+data1, Toast.LENGTH_SHORT).show();
 
 
-                Intent intent=new Intent(getContext(),UMainActivity.class);
-                Toast.makeText(getActivity(), position+" "+ID1.length, Toast.LENGTH_SHORT).show();
-                intent.putExtra("id",ID1[position]);
+                Intent intent=new Intent(getActivity(),UMainActivity.class);
+                Toast.makeText(getActivity(), position+" "+ID1.length+" hello", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), position+" "+ID1.length+" hello", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), position+" "+ID1.length+" hello", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), position+" "+ID1.length+" hello", Toast.LENGTH_LONG).show();
+                System.out.println(position+" "+ID1[position]+" "+ID1.length+" hello");//, Toast.LENGTH_LONG).show();
+                Bundle b=new Bundle();
+                b.putString("id",String.valueOf(ID1[position]));
+                intent.putExtras(b);
                 startActivity(intent);
                 //code for map;
 
