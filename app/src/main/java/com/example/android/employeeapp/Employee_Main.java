@@ -181,8 +181,9 @@ public class Employee_Main extends AppCompatActivity implements ExampleBottomShe
         uploadobj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                name = nam.getText().toString();
-                sendFile();
+//                name = nam.getText().toString();
+//                sendFile();
+                startActivity(new Intent(Employee_Main.this,Emp_main.class));
             }
         });
 

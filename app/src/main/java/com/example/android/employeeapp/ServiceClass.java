@@ -1,7 +1,7 @@
 package com.example.android.employeeapp;
 
 import android.Manifest;
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,8 +10,10 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.ResultReceiver;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -32,7 +34,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ServiceClass extends IntentService {
+public class ServiceClass extends Service {
 
 
     private static final int REQUEST_LOCATION = 1;
@@ -48,6 +50,8 @@ public class ServiceClass extends IntentService {
     FusedLocationProviderClient mFusedLocationClient;
     Boolean run=false;
     ResultReceiver rr;
+    int mstartmode;
+    IBinder mBinder;
 
 
     @Override
@@ -66,22 +70,101 @@ public class ServiceClass extends IntentService {
 
     }
 
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    @Override
+    public int onStartCommand(final Intent intent, int flags, int startId) {
+
+
+
+        requestQueue= Volley.newRequestQueue(this);
+        System.out.println("yeah srvicing");
+
+        if(Employee_Main.SERVICE_RUN) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                    System.out.println("heyyy srvicing");
+
+                    return START_NOT_STICKY;
+                }
+            }
+            mFusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    System.out.println("srvicing");
+
+                    super.onLocationResult(locationResult);
+//                    lattitude = locationResult.getLastLocation().getLatitude() + "";
+//                    longitude = locationResult.getLastLocation().getLongitude() + "";
+//                    id = intent.getStringExtra("ID");
+//                    performupload();
+//                    ResultReceiver rr = intent.getParcelableExtra("receiver");
+//
+//                    Bundle b = new Bundle();
+//                    b.putString("lat", lattitude);
+//                    b.putString("lng", longitude);
+//                    rr.send(Employee_Main.RESULT_CODE, b);
+                }
+            }, getMainLooper());
+        }else
+        {
+
+        }
+
+        t.scheduleAtFixedRate(task=new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("\n\n\n\n\n\n\n\nhere its timer\n\n\n\n\n\n\n\n\n\n\n\n");
+
+                if(Employee_Main.SERVICE_RUN) {
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    id = intent.getStringExtra("ID");
+                    rr = intent.getParcelableExtra("receiver");
+                    getLocation();
+                    System.out.println("\n\n\n\n\n\n\n\nhere its running\n\n\n\n\n\n\n\n\n\n\n\n");
+
+                    Bundle b = new Bundle();
+                    b.putString("lat", lattitude);
+                    b.putString("lng", longitude);
+                    rr.send(Employee_Main.RESULT_CODE, b);
+                }
+                else
+                {
+                    t.cancel();
+                    t.purge();
+                    System.out.println("\n\n\n\n\n\n\n\nhere its stopped\n\n\n\n\n\n\n\n\n\n\n\n");
+
+                }
+
+            }
+        },0,3000);
+
+
+
+        return START_NOT_STICKY;
+    }
 
     public ServiceClass(Context context)
     {
-        super("Sample");
+//        super("Sample");
         this.context=context;
     }
 
     public ServiceClass()
     {
-        super("Sample");
+//        super("Sample");
         this.context=context;
         mHandler = new Handler();
 
 
     }
-    @Override
+
+//    @Override
     protected void onHandleIntent(@Nullable final Intent intent) {
         requestQueue= Volley.newRequestQueue(this);
         System.out.println("yeah srvicing");
@@ -194,8 +277,10 @@ public class ServiceClass extends IntentService {
             StringRequest name = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    System.out.println(lattitude+"  yeahh "+longitude);
                     System.out.println("Result received");
                     run=false;
+                    Toast.makeText(getApplicationContext(),lattitude+ "   yeah "+longitude, Toast.LENGTH_SHORT).show();
                 }
             }, new Response.ErrorListener() {
                 @Override

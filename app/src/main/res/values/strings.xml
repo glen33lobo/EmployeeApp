@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Employee App</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_emp_main">Emp_main</string>
+    <string name="tab_text_1">MAIN</string>
+    <string name="tab_text_2">UPLOADS</string>
 </resources>
