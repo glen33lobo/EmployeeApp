@@ -138,7 +138,7 @@ public class UMainActivity extends AppCompatActivity {
 
     //volley code to send image
     private void sendTheData() {
-        String url="http://www.thantrajna.com/sjec_task/public_html/sjec_task/uploadfile.php";
+        String url="http://www.thantrajna.com/sjec_task/public_html/sjec_task/upload_files/upload.php";
         StringRequest stringRequest=new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
