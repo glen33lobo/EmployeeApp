@@ -190,8 +190,8 @@ public class ServiceClass extends Service {
                     System.out.println("srvicing");
 
                     super.onLocationResult(locationResult);
-//                    lattitude = locationResult.getLastLocation().getLatitude() + "";
-//                    longitude = locationResult.getLastLocation().getLongitude() + "";
+                    lattitude = locationResult.getLastLocation().getLatitude() + "";
+                    longitude = locationResult.getLastLocation().getLongitude() + "";
 //                    id = intent.getStringExtra("ID");
 //                    performupload();
 //                    ResultReceiver rr = intent.getParcelableExtra("receiver");
@@ -204,8 +204,9 @@ public class ServiceClass extends Service {
             }, getMainLooper());
         }else
         {
-
         }
+
+
 
         t.scheduleAtFixedRate(task=new TimerTask() {
             @Override
@@ -233,7 +234,7 @@ public class ServiceClass extends Service {
                 }
 
             }
-        },0,3000);
+        },0,8000);
 
 
     }

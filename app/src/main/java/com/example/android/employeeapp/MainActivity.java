@@ -73,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
-
+            Toast.makeText(this, "didnt start", Toast.LENGTH_SHORT).show();
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(this, "into get location", Toast.LENGTH_SHORT).show();
             getLocation();
         }
         emp_btn.setOnClickListener(new View.OnClickListener() {
@@ -192,8 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 lattitude = String.valueOf(latti);
                 longitude = String.valueOf(longi);
             }else {
-                System.out.println("Unble to Trace your location");
-            }
+                Toast.makeText(this, "Unable to trace", Toast.LENGTH_SHORT).show();            }
         }
     }
 

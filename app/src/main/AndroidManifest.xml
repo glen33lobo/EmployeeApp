@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.location.gps" />
@@ -22,22 +21,17 @@
         android:required="true" />
 
     <application
-        android:allowBackup="true"
         android:configChanges="keyboardHidden|orientation|screenSize"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcherapp"
         android:label="@string/app_name"
-        android:persistent="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:persistent="true"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".Emp_main"
-            android:label="@string/title_activity_emp_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".MainActivity"
-            android:noHistory="true" />
+        <activity android:name=".MainActivity"
+            android:noHistory="true"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -53,20 +47,18 @@
         <activity
             android:name=".MapsActivity"
             android:label="Map" />
-        <activity
-            android:name=".Employee_Main"
+        <activity android:name=".Employee_Main"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="My Activities"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar1" />
+            android:label="My Activities"
+            android:theme="@style/AppTheme.NoActionBar1"/>
         <activity
             android:name=".EmpActivities"
             android:label="Recent Activities" />
         <activity
             android:name=".All_Employers"
             android:label="Employee List" />
-        <activity
-            android:name=".Splash"
+        <activity android:name=".Splash"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -76,10 +68,8 @@
         </activity>
 
         <service
-            android:name="com.example.android.employeeapp.ServiceClass"
+            android:name=".ServiceClass"
             android:enabled="true"
-            android:icon="@drawable/ic_launcher_background"
-            android:label="@string/app_name"
             android:exported="false"
             android:stopWithTask="false"/>
     </application>

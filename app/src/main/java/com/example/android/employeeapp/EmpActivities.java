@@ -94,7 +94,7 @@ public class EmpActivities extends AppCompatActivity {
         });
     }
 
-    class emp_descpAdaptor extends ArrayAdapter<String>{
+    static class emp_descpAdaptor extends ArrayAdapter<String>{
 
         Context context;
         String name[];
@@ -113,12 +113,12 @@ public class EmpActivities extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater=(LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater=(LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row=layoutInflater.inflate(R.layout.list_details,parent,false);
             TextView title=row.findViewById(R.id.emp_name);
             TextView desc=row.findViewById(R.id.emp_descp);
             TextView t=row.findViewById(R.id.emp_time);
-            title.setText(names[position]);
+            title.setText(name[position]);
             desc.setText(ID[position]+"");
             t.setText(time[position]);
             return row;
