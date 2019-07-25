@@ -1,22 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+    tools:context=".Employee_Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.PlaceholderFragment">
+    >
 
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:text="TAB 1"
-        android:layout_centerInParent="true"
-        android:textSize="50sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#DAECDA"
+        android:id="@+id/linearLayoutid"
+        android:layout_below="@+id/tool_bar"
+        >
+
+        <TextView
+            android:layout_width="122dp"
+            android:layout_height="wrap_content"
+            android:text="Date :"
+            android:textStyle="bold"
+            android:id="@+id/d1"
+            android:textColor="#000000"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textColor="#000000"
+            android:id="@+id/dateId"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="30dp"
+            android:textSize="24sp"
+            android:layout_toRightOf="@id/d1"
+            />
+
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/circle"
+            android:text="LOGGED\nIN"
+            android:textSize="30sp"
+            android:layout_margin="20dp"
+
+            android:id="@+id/loginout"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/d1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/create_work"
+            android:text="Create Work"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/loginout"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loginout"
+            android:id="@+id/ll1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:hint="Title"
+                android:padding="10dp"
+                android:background="#FFFFFF"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Desciption"
+                android:textSize="20sp"
+                android:hint="Enter Description"
+                android:background="#FFFFFF"
+                android:padding="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_below="@id/ll1"
+                android:layout_marginBottom="15dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:padding="10dp"
+                android:id="@+id/upload_info"
+                android:background="@drawable/ic_file_upload_black_24dp"
+                />
+        </LinearLayout>
+
+
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="extras"
+            android:textSize="30dp"
+            android:background="#3517"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="50dp"
+            android:id="@+id/upload_for_extras"
+            android:layout_below="@id/ll1"/>
+
+
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/upload_for_extras"
+            android:id="@+id/ll2"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <EditText
+                android:id="@+id/obname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:hint="Title"
+                android:padding="10dp"
+                android:background="#FFFFFF"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="4"
+                android:padding="10dp"
+                android:id="@+id/ob_upload"
+                android:background="@drawable/ic_file_upload_black_24dp"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

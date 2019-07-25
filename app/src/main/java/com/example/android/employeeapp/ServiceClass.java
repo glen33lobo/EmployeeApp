@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.ResultReceiver;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -40,7 +39,7 @@ public class ServiceClass extends Service {
     private static final int REQUEST_LOCATION = 1;
     LocationManager locationManager;
     LocationRequest locationRequest;
-    private Timer t;//=new Timer(String.valueOf(Looper.getMainLooper()));
+    public static Timer t;//=new Timer(String.valueOf(Looper.getMainLooper()));
     String lattitude,longitude;
     RequestQueue requestQueue;
     private Context context;
@@ -116,34 +115,41 @@ public class ServiceClass extends Service {
 
         }
 
-        t.scheduleAtFixedRate(task=new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("\n\n\n\n\n\n\n\nhere its timer\n\n\n\n\n\n\n\n\n\n\n\n");
+        try {
 
-                if(Employee_Main.SERVICE_RUN) {
-                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    id = intent.getStringExtra("ID");
-                    rr = intent.getParcelableExtra("receiver");
-                    getLocation();
-                    System.out.println("\n\n\n\n\n\n\n\nhere its running\n\n\n\n\n\n\n\n\n\n\n\n");
+            t.schedule(task = new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.println("\n\n\n\n\n\n\n\nhere its timer\n\n\n\n\n\n\n\n\n\n\n\n");
 
-                    Bundle b = new Bundle();
-                    b.putString("lat", lattitude);
-                    b.putString("lng", longitude);
-                    rr.send(Employee_Main.RESULT_CODE, b);
+                    if (Emp_info.SERVICE_RUN) {
+                        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        id = intent.getStringExtra("ID");
+                        rr = intent.getParcelableExtra("receiver");
+                        getLocation();
+                        System.out.println("\n\n\n\n\n\n\n\nhere its running\n\n\n\n\n\n\n\n\n\n\n\n");
+
+                        Bundle b = new Bundle();
+                        b.putString("lat", lattitude);
+                        b.putString("lng", longitude);
+                        rr.send(Employee_Main.RESULT_CODE, b);
+                    } else {
+                        t.cancel();
+                        t.purge();
+                        System.out.println("\n\n\n\n\n\n\n\nhere its stopped\n\n\n\n\n\n\n\n\n\n\n\n");
+
+                    }
+
                 }
-                else
-                {
-                    t.cancel();
-                    t.purge();
-                    System.out.println("\n\n\n\n\n\n\n\nhere its stopped\n\n\n\n\n\n\n\n\n\n\n\n");
+            }, 0, 3000);
 
-                }
+        }catch (Exception e)
+        {
+            System.out.println("\n\n\n\n\n\n\n\n"+e.toString()+"\n\n\n\n\n\n\n\n\n\n\n\n");
 
-            }
-        },0,3000);
+            System.out.println("\n\n\n\n\n\n\n\nhere in catch\n\n\n\n\n\n\n\n\n\n\n\n");
 
+        }
 
 
         return START_NOT_STICKY;
@@ -280,7 +286,6 @@ public class ServiceClass extends Service {
                     System.out.println(lattitude+"  yeahh "+longitude);
                     System.out.println("Result received");
                     run=false;
-                    Toast.makeText(getApplicationContext(),lattitude+ "   yeah "+longitude, Toast.LENGTH_SHORT).show();
                 }
             }, new Response.ErrorListener() {
                 @Override

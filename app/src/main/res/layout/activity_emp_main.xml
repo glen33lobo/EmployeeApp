@@ -6,10 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".Emp_main">
 
+
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
+
+
+
 
         <TextView
             android:id="@+id/title"
@@ -43,6 +48,10 @@
 
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"

@@ -90,13 +90,13 @@ public class Employee_Main extends AppCompatActivity implements ExampleBottomShe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_employee__main);
+//        setContentView(R.layout.activity_employee__main);
 
 
         work_create=(Button)findViewById(R.id.create_work);
         title = (EditText) findViewById(R.id.title);
-        upb = (Button) findViewById(R.id.update_desc);
-        uploadb = (Button) findViewById(R.id.upload);
+        upb = (Button) findViewById(R.id.upload_info);
+        uploadb = (Button) findViewById(R.id.upload_for_extras);
         editText = (EditText) findViewById(R.id.Desciption);
         sp = getSharedPreferences(MSP1, Context.MODE_PRIVATE);
         loginout = (Button) findViewById(R.id.loginout);

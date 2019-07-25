@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                                             ed.commit();
                                             channel= (sp.getString(log, ""));
                                             Toast.makeText(MainActivity.this, channel+" is the resss", Toast.LENGTH_SHORT).show();
-                                            Intent in = new Intent(MainActivity.this, Employee_Main.class);
+                                            Intent in = new Intent(MainActivity.this, Emp_main.class);
                                             in.putExtra("ID2", channel);
                                             dialog.dismiss();
                                             startActivity(in);
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         if (sp.contains(log)) {
             channel= (sp.getString(log, ""));
             Toast.makeText(MainActivity.this, channel+" is the resss", Toast.LENGTH_SHORT).show();
-            Intent in1 = new Intent(MainActivity.this, Employee_Main.class);
+            Intent in1 = new Intent(MainActivity.this, Emp_main.class);
             in1.putExtra("IDpass", channel);
             startActivity(in1);
         }
