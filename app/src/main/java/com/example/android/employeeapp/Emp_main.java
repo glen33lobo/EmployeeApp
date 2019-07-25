@@ -33,7 +33,7 @@ public class Emp_main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emp_main);
-        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),);
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         tabLayout = findViewById(R.id.tabs);
@@ -42,6 +42,9 @@ public class Emp_main extends AppCompatActivity {
         trans = (TabItem) findViewById(R.id.tab_trans);
 
         viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+
+
 
         viewPager.setCurrentItem(0, true);
         //copy contents

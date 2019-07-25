@@ -35,13 +35,13 @@ import java.util.Map;
 public class Emp_upload extends Fragment {
 
     ListView listView;
-    String names[]=null;
-    Integer ID[]=null;
+    String names[];
+    static int[] ID1=null;
     String time[]=null;
     String latitude[]=null;
     String longitude[]=null;
     RequestQueue requestQueue;
-    String data1;
+    String data1,ar[],id;
     int value;
     ProgressDialog dialog;
 
@@ -50,58 +50,32 @@ public class Emp_upload extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootv=inflater.inflate(R.layout.fragment_emp_upload,container,false);
 
+        Toast.makeText(getActivity(), " second page", Toast.LENGTH_LONG).show();
 
-        dialog=new ProgressDialog(getActivity());
-        dialog.setTitle("Please Wait");
-        dialog.setMessage("Loading..");
 
         listView=rootv.findViewById(R.id.activity_list);
-//        Intent intent = getIntent();
-//        data = intent.getStringExtra("ID");
 
 
-        Bundle bundle = getActivity().getIntent().getExtras();
-        if (bundle != null) {
-            data1 = bundle.getString("id");
+
+        data1 = getArguments().getString("id");
+
             if (data1 == null) {
-                data1 = bundle.getString("IDpass");
-                String ar[] = data1.split("@");
-                String id = ar[0];
-                Toast.makeText(getContext(), "" + id, Toast.LENGTH_SHORT).show();
-//                checklogin(id);
-            } else {
-                Toast.makeText(getActivity(), " data " + data, Toast.LENGTH_SHORT).show();
-                ar = data.split("@");
+                data1 = getArguments().getString("IDpass");
+                ar= data1.split("@");
                 id = ar[0];
-                status_of_user = ar[1];
-                datep.setText(ar[2]);
+                Toast.makeText(getContext(), "" + id, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), " data " + data1, Toast.LENGTH_LONG).show();
+                ar = data1.split("@");
+                id = ar[0];
 
-                if (status_of_user.equals("Login")) {
-                    work_create.setVisibility(View.VISIBLE);
-                    title.setVisibility(View.INVISIBLE);
-                    upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
-                    editText.setVisibility(View.INVISIBLE);
-
-                    startMyService(id);
-                    loginout.setBackgroundResource(R.drawable.circle);
-                    loginout.setText("LOGGED\nIN");
-                } else if (status_of_user.equals("Logout")) {
-                    work_create.setVisibility(View.INVISIBLE);
-                    title.setVisibility(View.INVISIBLE);
-                    upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
-                    editText.setVisibility(View.INVISIBLE);
-
-                    loginout.setBackgroundResource(R.drawable.circlered);
-                    loginout.setText("LOGGED\nOUT");
-
-                }
-                Toast.makeText(getActivity(), "" + status_of_user, Toast.LENGTH_SHORT).show();
             }
-        }
+
+        System.out.println("ar+"+ar);
+
+        System.out.println("ID+"+id);
         requestQueue = Volley.newRequestQueue(getContext());
-        dialog.show();
+//        dialog.show();
         retrievalofdetails();
 
 
@@ -112,16 +86,10 @@ public class Emp_upload extends Fragment {
 
                 //   Toast.makeText(EmpActivities.this, "Clicked "+data1, Toast.LENGTH_SHORT).show();
 
-                int i;
-                for(i=0;i<value;i++)
-                {
-                    if(position==i) {
-                        break;
-                    }
-                }
-                Intent intent=new Intent(getContext(),MapsActivity.class);
-                intent.putExtra("latid",latitude[i]);
-                intent.putExtra("longid",longitude[i]);
+
+                Intent intent=new Intent(getContext(),UMainActivity.class);
+                Toast.makeText(getActivity(), position+" "+ID1.length, Toast.LENGTH_SHORT).show();
+                intent.putExtra("id",ID1[position]);
                 startActivity(intent);
                 //code for map;
 
@@ -137,10 +105,10 @@ public class Emp_upload extends Fragment {
 
         Context context;
         String name[];
-        Integer ID[];
+        int ID[];
         String time[];
 
-        emp_descpAdaptor (Context c, String name[],Integer ID[],String time[]){
+        emp_descpAdaptor (Context c, String name[],int ID[],String time[]){
             super(c, R.layout.list_details,R.id.emp_name,name);
             this.context=c;
             this.name=name;
@@ -166,6 +134,8 @@ public class Emp_upload extends Fragment {
 
     public void retrievalofdetails()
     {
+        Toast.makeText(getActivity(), " retrieve", Toast.LENGTH_LONG).show();
+
         String url="http://www.thantrajna.com/sjec_task/Employee_details/Retreive_details.php";
 //        StringRequest name=new StringRequest( Request.Method.POST,url, new Response.Listener() {
 //            @Override
@@ -223,41 +193,43 @@ public class Emp_upload extends Fragment {
                             JSONObject jsonObject=new JSONObject(response);
                             JSONArray jsonArray=jsonObject.getJSONArray("val");
                             names=new String[jsonArray.length()];
-                            ID=new Integer[jsonArray.length()];
+                            ID1=new int[jsonArray.length()];
                             time=new String[jsonArray.length()];
                             latitude=new String[jsonArray.length()];
                             longitude=new String[jsonArray.length()];
                             for(i=0;i<jsonArray.length();i++) {
                                 JSONObject obj = jsonArray.getJSONObject(i);
-                                ID[i] = obj.getInt("EMP_ID");
+                                ID1[i] = obj.getInt("TR_ID");
                                 latitude[i] = obj.getString("LATITUDE");
                                 longitude[i] = obj.getString("LONGITUDE");
                                 names[i] = obj.getString("DESCRIPTION");
                                 time[i] = obj.getString("DATE");
                             }
-
+                            Toast.makeText(getActivity(), "+"+ID1[2], Toast.LENGTH_LONG).show();
                             value=i+1;
 
-                            //  Toast.makeText(EmpActivities.this, names[0]+" "+names[1], Toast.LENGTH_SHORT).show();
+                            System.out.println("In response");
                         } catch (JSONException e) {
                             dialog.dismiss();
                             e.printStackTrace();
                         }
-                        dialog.dismiss();
-                        EmpActivities.emp_descpAdaptor adaptor=new EmpActivities.emp_descpAdaptor(getContext(),names,ID,time);
+                        emp_descpAdaptor adaptor=new emp_descpAdaptor(getContext(),names,ID1,time);
                         listView.setAdapter(adaptor);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialog.dismiss();
+                System.out.println("In error + "+error.toString());
+
             }
         }){
             @Override
             protected Map<String,String> getParams() throws AuthFailureError
             {
                 Map<String,String> params=new HashMap<String, String>();
-                params.put("id",data1.toString());
+                params.put("id",id);
+//                Toast.makeText(getContext(), "id "+ id, Toast.LENGTH_SHORT).show();
                 return params;
             }
         };
@@ -267,10 +239,4 @@ public class Emp_upload extends Fragment {
     }
 
 
-//    public void maps(View view)
-//    {
-//        Intent i=new Intent(EmpActivities.this,MapsActivity.class);
-//        //i.putExtra("id",ID[pos]);
-//        startActivity(i);
-//    }
 }

@@ -1,6 +1,7 @@
 package com.example.android.employeeapp.ui.main;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -22,17 +23,27 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
     private final Context mContext;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    Bundle bundle;
+    int id;
+
+    public SectionsPagerAdapter(Context context, FragmentManager fm,id) {
         super(fm);
         mContext = context;
+        bundle=new Bundle();
+        this.id=id;
     }
+
+
 
     @Override
     public Fragment getItem(int position) {
+
         switch (position)
         {
             case 0:
                 Emp_info e1=new Emp_info();
+                bundle.putString("id", String.valueOf(id));
+                e1.setArguments(bundle);
                 return e1;
             case 1:
                 Emp_upload e2=new Emp_upload();

@@ -134,7 +134,7 @@ public class Emp_info extends Fragment {
                 data = bundle.getString("IDpass");
                 ar = data.split("@");
                 id = ar[0];
-                Toast.makeText(getContext(), "" + id, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), " iiidd" + id, Toast.LENGTH_SHORT).show();
                 checklogin(id);
             } else {
                 Toast.makeText(getActivity(), " data " + data, Toast.LENGTH_SHORT).show();
@@ -788,7 +788,7 @@ public class Emp_info extends Fragment {
                     public void run() {
                         lattitude = resultData.getString("lat");
                         longitude = resultData.getString("lng");
-                        Toast.makeText(getContext(), lattitude + "  " + longitude, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), lattitude + "  " + longitude, Toast.LENGTH_SHORT).show();
                     }
                 });
 
