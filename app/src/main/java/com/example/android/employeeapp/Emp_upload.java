@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,21 +30,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Emp_upload extends Fragment {
 
     ListView listView;
-    String names[];
-    static int[] ID1=null;
-    String time[]=null;
-    String latitude[]=null;
-    String longitude[]=null;
+    ArrayList<String> names;
+    static ArrayList<Integer> ID1=null;
+    ArrayList<String> time=null;
+    ArrayList<String> latitude=null;
+    ArrayList<String> longitude=null;
     RequestQueue requestQueue;
     String data1,ar[],id;
     int value;
     ProgressDialog dialog;
+    emp_descpAdaptor adaptor;
 
     @Nullable
     @Override
@@ -51,9 +54,17 @@ public class Emp_upload extends Fragment {
         View rootv=inflater.inflate(R.layout.fragment_emp_upload,container,false);
 
         Toast.makeText(getActivity(), " second page", Toast.LENGTH_LONG).show();
-
-
+        names=new ArrayList<String>();
+        ID1=new ArrayList<Integer>();
+        latitude =new ArrayList<String>();
+        longitude=new ArrayList<String>();
+        time=new ArrayList<String>();
         listView=rootv.findViewById(R.id.activity_list);
+
+        dialog=new ProgressDialog(getActivity());
+        dialog.setTitle("Please Wait");
+        dialog.setMessage("Loading..");
+
 
 
 
@@ -88,13 +99,9 @@ public class Emp_upload extends Fragment {
 
 
                 Intent intent=new Intent(getActivity(),UMainActivity.class);
-                Toast.makeText(getActivity(), position+" "+ID1.length+" hello", Toast.LENGTH_LONG).show();
-                Toast.makeText(getActivity(), position+" "+ID1.length+" hello", Toast.LENGTH_LONG).show();
-                Toast.makeText(getActivity(), position+" "+ID1.length+" hello", Toast.LENGTH_LONG).show();
-                Toast.makeText(getActivity(), position+" "+ID1.length+" hello", Toast.LENGTH_LONG).show();
-                System.out.println(position+" "+ID1[position]+" "+ID1.length+" hello");//, Toast.LENGTH_LONG).show();
+
                 Bundle b=new Bundle();
-                b.putString("id",String.valueOf(ID1[position]));
+                b.putString("id",String.valueOf(ID1.get(position)));
                 intent.putExtras(b);
                 startActivity(intent);
                 //code for map;
@@ -105,16 +112,43 @@ public class Emp_upload extends Fragment {
         return rootv;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            dialog.show();
+            Runnable progressRunnable = new Runnable() {
+
+                @Override
+                public void run() {
+                    dialog.cancel();
+                }
+            };
+
+            Handler pdCanceller = new Handler();
+            pdCanceller.postDelayed(progressRunnable, 1000);
+
+            names.clear();
+            longitude.clear();
+            latitude.clear();
+            time.clear();
+            ID1.clear();
+            retrievalofdetails();
+            adaptor.notifyDataSetChanged();
+
+
+        }
+    }
 
 
     class emp_descpAdaptor extends ArrayAdapter<String>{
 
         Context context;
-        String name[];
-        int ID[];
-        String time[];
+        ArrayList<String> name;
+        ArrayList<Integer> ID;
+        ArrayList<String> time;
 
-        emp_descpAdaptor (Context c, String name[],int ID[],String time[]){
+        emp_descpAdaptor (Context c, ArrayList name,ArrayList<Integer> ID,ArrayList<String> time){
             super(c, R.layout.list_details,R.id.emp_name,name);
             this.context=c;
             this.name=name;
@@ -131,9 +165,9 @@ public class Emp_upload extends Fragment {
             TextView title=row.findViewById(R.id.emp_name);
             TextView desc=row.findViewById(R.id.emp_descp);
             TextView t=row.findViewById(R.id.emp_time);
-            title.setText(names[position]);
-            desc.setText(ID[position]+"");
-            t.setText(time[position]);
+            title.setText(names.get(position));
+            desc.setText(ID1.get(position) +"");
+            t.setText(time.get(position));
             return row;
         }
     }
@@ -195,31 +229,39 @@ public class Emp_upload extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         try{
-                            int i;
+                            int i,j;
                             JSONObject jsonObject=new JSONObject(response);
                             JSONArray jsonArray=jsonObject.getJSONArray("val");
-                            names=new String[jsonArray.length()];
-                            ID1=new int[jsonArray.length()];
-                            time=new String[jsonArray.length()];
-                            latitude=new String[jsonArray.length()];
-                            longitude=new String[jsonArray.length()];
-                            for(i=0;i<jsonArray.length();i++) {
+//                            names=new String[jsonArray.length()];
+//                            ID1=new int[jsonArray.length()];
+//                            time=new String[jsonArray.length()];
+//                            latitude=new String[jsonArray.length()];
+//                            longitude=new String[jsonArray.length()];
+//                            int n=jsonArray.length();
+                            for(i=0,j=0;i<jsonArray.length();i++) {
                                 JSONObject obj = jsonArray.getJSONObject(i);
-                                ID1[i] = obj.getInt("TR_ID");
-                                latitude[i] = obj.getString("LATITUDE");
-                                longitude[i] = obj.getString("LONGITUDE");
-                                names[i] = obj.getString("DESCRIPTION");
-                                time[i] = obj.getString("DATE");
+                                names.add( obj.getString("DESCRIPTION"));
+                                if(names.get(j).equals("Logout") || names.get(j).equals("Login") || names.get(j).equals("CURRENT_LOC")  )
+                                {
+                                    names.remove(j);
+                                    continue;
+                                }
+                                ID1.add(obj.getInt("TR_ID")) ;
+                                latitude.add(obj.getString("LATITUDE"));
+                                longitude.add(obj.getString("LONGITUDE"));
+
+
+                                time.add(obj.getString("DATE")) ;
+                                j++;
                             }
-                            Toast.makeText(getActivity(), "+"+ID1[2], Toast.LENGTH_LONG).show();
-                            value=i+1;
+                            value=j+1;
 
                             System.out.println("In response");
                         } catch (JSONException e) {
-                            dialog.dismiss();
+//                            dialog.dismiss();
                             e.printStackTrace();
                         }
-                        emp_descpAdaptor adaptor=new emp_descpAdaptor(getContext(),names,ID1,time);
+                        adaptor=new emp_descpAdaptor(getContext(),names,ID1,time);
                         listView.setAdapter(adaptor);
 
                     }

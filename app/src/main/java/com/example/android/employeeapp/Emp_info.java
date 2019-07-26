@@ -3,6 +3,7 @@ package com.example.android.employeeapp;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -86,6 +87,7 @@ public class Emp_info extends Fragment {
     String[] ar;
     Handler h = new Handler();
     Intent intentser;
+    ProgressDialog progressDialog;
 
 
     @Nullable
@@ -102,6 +104,9 @@ public class Emp_info extends Fragment {
         queue = Volley.newRequestQueue(getContext());
         intentser = new Intent(getContext(), ServiceClass.class);
 
+        progressDialog=new ProgressDialog(getActivity());
+        progressDialog.setTitle("Please Wait");
+        progressDialog.setMessage("Loading..");
 
         title.setVisibility(View.INVISIBLE);
         upb.setVisibility(View.INVISIBLE);
@@ -163,19 +168,13 @@ public class Emp_info extends Fragment {
         }
 
 
-//        uploadobj.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                name = nam.getText().toString();
-//                sendFile();
-////                startActivity(new Intent(Employee_Main.this,Emp_main.class));
-//            }
-//        });
 
 
         loginout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+//                checklogin(id);
                 if (status_of_user.equals("Logout")) {
 
                     work_create.setVisibility(View.VISIBLE);
@@ -340,32 +339,6 @@ public class Emp_info extends Fragment {
     }
 
 
-    private void sendFile() {
-        String url = "https://yellowapp.000webhostapp.com/sendimage/savefile.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(getActivity(), "" + response, Toast.LENGTH_SHORT).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), "" + error, Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("file", sendfiledata);
-                params.put("name", name);
-
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-    }
 
 
 //    @Override
@@ -466,6 +439,7 @@ public class Emp_info extends Fragment {
 
 
     private void checklogin(final String id) {
+        progressDialog.show();
         String url = "http://www.thantrajna.com/sjec_task/For_Employers/check_already_login.php";
         StringRequest name = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
@@ -474,18 +448,8 @@ public class Emp_info extends Fragment {
                 String x[] = response.split("@");
                 String status_ = x[0];
                 String da = x[1];
-                if (status_.equals("Login")) {
-                    startMyService(id);
-                    work_create.setVisibility(View.VISIBLE);
-                    title.setVisibility(View.INVISIBLE);
-                    upb.setVisibility(View.INVISIBLE);
-                    editText.setVisibility(View.INVISIBLE);
-                    startMyService(id);
-                    loginout.setBackgroundResource(R.drawable.circle);
-                    loginout.setText("LOGGED\nIN");
-                    status_of_user = "Login";
-                    Toast.makeText(getActivity(), "with SP login", Toast.LENGTH_SHORT).show();
-                } else if (status_.equals("Logout")) {
+                Toast.makeText(getActivity(), ""+status_, Toast.LENGTH_SHORT).show();
+                if (status_.equals("Logout")) {
 
                     work_create.setVisibility(View.INVISIBLE);
                     title.setVisibility(View.INVISIBLE);
@@ -499,16 +463,34 @@ public class Emp_info extends Fragment {
                     loginout.setText("LOGGED\nOUT");
                     Toast.makeText(getActivity(), "with SP logout", Toast.LENGTH_SHORT).show();
                     status_of_user = "Logout";
+
+
+
+                } else{
+
+                    startMyService(id);
+                    work_create.setVisibility(View.VISIBLE);
+                    title.setVisibility(View.INVISIBLE);
+                    upb.setVisibility(View.INVISIBLE);
+                    editText.setVisibility(View.INVISIBLE);
+                    startMyService(id);
+                    loginout.setBackgroundResource(R.drawable.circle);
+                    loginout.setText("LOGGED\nIN");
+                    status_of_user = "Login";
+                    Toast.makeText(getActivity(), "with SP login", Toast.LENGTH_SHORT).show();
                 }
                 datep.setText(da);
 
+                progressDialog.dismiss();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 checklogin(id);
+
                 Toast.makeText(getActivity(), "Err: " + error, Toast.LENGTH_SHORT).show();
 
+                progressDialog.dismiss();
             }
         }) {
             @Override
