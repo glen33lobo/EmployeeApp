@@ -1,5 +1,6 @@
 package com.example.android.employeeapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,8 @@ public class UMainActivity extends AppCompatActivity {
     ImageView im;
     Button bt,filebtn,savef;
     EditText et;
+    ProgressDialog progressDialog;
+    String trid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,15 +49,17 @@ public class UMainActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         im=(ImageView)findViewById(R.id.img);
         bt=(Button)findViewById(R.id.btn);
-        et=(EditText)findViewById(R.id.name);
         filebtn=(Button)findViewById(R.id.filebtn);
         savef=(Button)findViewById(R.id.savefile);
 
+        progressDialog=new ProgressDialog(UMainActivity.this);
+        progressDialog.setTitle("Please Wait");
+        progressDialog.setMessage("Loading..");
 
         savef.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                name=et.getText().toString();
+                progressDialog.show();
                 sendFile();
             }
         });
@@ -76,19 +81,16 @@ public class UMainActivity extends AppCompatActivity {
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                name=et.getText().toString();
-                if(name.isEmpty()){
-                    Toast.makeText(UMainActivity.this, "Don't you have a name??\nSo name this image", Toast.LENGTH_SHORT).show();
-                }
-                else{
+
+                    progressDialog.show();
                     sendTheData();
-                }
+
             }
         });
 
 //initial part
         Bundle bundle = getIntent().getExtras();
-        String trid = bundle.getString("id");
+        trid = bundle.getString("id");
             Toast.makeText(this, "id" +trid, Toast.LENGTH_SHORT).show();
 
 
@@ -100,17 +102,19 @@ public class UMainActivity extends AppCompatActivity {
 
     }
     private void sendFile() {
-        String url="http://www.thantrajna.com/sjec_task/upload_files/upload1.php";
+        String url="http://www.thantrajna.com/sjec_task/upload_files/upload.php";
         StringRequest stringRequest=new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.dismiss();
                         Toast.makeText(UMainActivity.this, "res:"+response, Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
                         Toast.makeText(UMainActivity.this, "er:"+error, Toast.LENGTH_SHORT).show();
                     }
                 }){
@@ -118,7 +122,7 @@ public class UMainActivity extends AppCompatActivity {
             protected Map<String,String> getParams()throws AuthFailureError {
                 Map<String,String> params=new HashMap<String, String>();
                 params.put("file",sendfiledata);
-                params.put("name",name);
+                params.put("tr_id",trid);
                 return params;
             }
         };
@@ -140,13 +144,14 @@ public class UMainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.dismiss();
                         Toast.makeText(UMainActivity.this, " res:"+response, Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.toString());
+                        progressDialog.dismiss();
                         Toast.makeText(UMainActivity.this, "er:"+error, Toast.LENGTH_SHORT).show();
                     }
                 }){
@@ -154,7 +159,7 @@ public class UMainActivity extends AppCompatActivity {
             protected Map<String,String> getParams()throws AuthFailureError {
                 Map<String,String> params=new HashMap<String, String>();
                 params.put("file",senddata);
-                params.put("name",name);
+                params.put("tr_id",trid);
 
                 return params;
             }
@@ -191,6 +196,7 @@ public class UMainActivity extends AppCompatActivity {
                 im.setImageURI(imagepicked);
                 senddata=BitMapToString(bm);
             } else {
+                progressDialog.dismiss();
                 Toast.makeText(this, "Trouble picking image", Toast.LENGTH_SHORT).show();
             }
 

@@ -7,40 +7,60 @@
     tools:context=".UMainActivity">
 
 
+    <TextView
+        android:id="@+id/imgtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Image Upload"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:gravity="center_horizontal"
+       />
+
     <ImageView
         android:id="@+id/img"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:src="@drawable/download"/>
+        android:src="@drawable/download"
+        android:layout_below="@id/imgtitle"/>
+
+
 
     <Button
         android:id="@+id/btn"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_below="@id/name"
+        android:layout_below="@id/img"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:text="save"/>
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_marginTop="10dp"
-        android:hint="Name ur image buddy!!"
-        android:textSize="25dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+
+
+    <TextView
+        android:id="@+id/filetitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/img"/>
+        android:layout_marginTop="40dp"
+        android:text="File Upload"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/btn"/>
+
+
 
     <Button
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/filebtn"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_below="@id/btn"
+        android:layout_below="@id/filetitle"
         android:layout_marginLeft="20dp"
         android:text="file"/>
 
@@ -48,8 +68,8 @@
         android:id="@+id/savefile"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_below="@id/btn"
-        android:layout_marginTop="10dp"
+        android:layout_below="@id/filetitle"
+        android:layout_marginTop="30dp"
         android:layout_toRightOf="@id/filebtn"
         android:text="save file"
         android:layout_marginLeft="50dp"/>

@@ -71,7 +71,7 @@ public class Emp_info extends Fragment {
     LocationManager locationManager;
     String lattitude, longitude;
 
-    Button upb, uploadb, work_create;
+    Button upb,  work_create;
     ImageButton b;
     String data, name, sendfiledata, id, status_of_user;
     RequestQueue requestQueue, queue;
@@ -86,7 +86,6 @@ public class Emp_info extends Fragment {
     String[] ar;
     Handler h = new Handler();
     Intent intentser;
-    private Employee_Main.BottomSheetListener mListener;
 
 
     @Nullable
@@ -97,19 +96,15 @@ public class Emp_info extends Fragment {
         work_create = (Button) rootv.findViewById(R.id.create_work);
         title = (TextView) rootv.findViewById(R.id.title);
         upb = (Button) rootv.findViewById(R.id.upload_info);
-        uploadb = (Button) rootv.findViewById(R.id.upload_for_extras);
         editText = (EditText) rootv.findViewById(R.id.Desciption);
         loginout = (Button) rootv.findViewById(R.id.loginout);
         datep = (TextView) rootv.findViewById(R.id.dateId);
-        uploadobj = (Button) rootv.findViewById(R.id.ob_upload);
-        nam = (EditText) rootv.findViewById(R.id.obname);
         queue = Volley.newRequestQueue(getContext());
         intentser = new Intent(getContext(), ServiceClass.class);
 
 
         title.setVisibility(View.INVISIBLE);
         upb.setVisibility(View.INVISIBLE);
-        uploadb.setVisibility(View.INVISIBLE);
         editText.setVisibility(View.INVISIBLE);
 
 
@@ -119,7 +114,6 @@ public class Emp_info extends Fragment {
                 work_create.setVisibility(View.INVISIBLE);
                 title.setVisibility(View.VISIBLE);
                 upb.setVisibility(View.VISIBLE);
-                uploadb.setVisibility(View.VISIBLE);
                 editText.setVisibility(View.VISIBLE);
             }
         });
@@ -147,7 +141,6 @@ public class Emp_info extends Fragment {
                     work_create.setVisibility(View.VISIBLE);
                     title.setVisibility(View.INVISIBLE);
                     upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
                     editText.setVisibility(View.INVISIBLE);
 
                     startMyService(id);
@@ -157,7 +150,6 @@ public class Emp_info extends Fragment {
                     work_create.setVisibility(View.INVISIBLE);
                     title.setVisibility(View.INVISIBLE);
                     upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
                     editText.setVisibility(View.INVISIBLE);
 
                     loginout.setBackgroundResource(R.drawable.circlered);
@@ -171,14 +163,14 @@ public class Emp_info extends Fragment {
         }
 
 
-        uploadobj.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                name = nam.getText().toString();
-                sendFile();
-//                startActivity(new Intent(Employee_Main.this,Emp_main.class));
-            }
-        });
+//        uploadobj.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                name = nam.getText().toString();
+//                sendFile();
+////                startActivity(new Intent(Employee_Main.this,Emp_main.class));
+//            }
+//        });
 
 
         loginout.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +181,6 @@ public class Emp_info extends Fragment {
                     work_create.setVisibility(View.VISIBLE);
                     title.setVisibility(View.INVISIBLE);
                     upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
                     editText.setVisibility(View.INVISIBLE);
                     insertlogin(id);
                     loginout.setBackgroundResource(R.drawable.circle);
@@ -204,7 +195,6 @@ public class Emp_info extends Fragment {
                     work_create.setVisibility(View.INVISIBLE);
                     title.setVisibility(View.INVISIBLE);
                     upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
                     editText.setVisibility(View.INVISIBLE);
                     insertlogout(id);
                     loginout.setBackgroundResource(R.drawable.circlered);
@@ -232,7 +222,6 @@ public class Emp_info extends Fragment {
                 work_create.setVisibility(View.VISIBLE);
                 title.setVisibility(View.INVISIBLE);
                 upb.setVisibility(View.INVISIBLE);
-                uploadb.setVisibility(View.INVISIBLE);
                 editText.setVisibility(View.INVISIBLE);
                 if (editText.getText().toString().trim().length() > 0) {
                     update(data);
@@ -242,13 +231,8 @@ public class Emp_info extends Fragment {
             }
         });
 
-        uploadb.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
+
+
 
         return rootv;
     }
@@ -495,7 +479,6 @@ public class Emp_info extends Fragment {
                     work_create.setVisibility(View.VISIBLE);
                     title.setVisibility(View.INVISIBLE);
                     upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
                     editText.setVisibility(View.INVISIBLE);
                     startMyService(id);
                     loginout.setBackgroundResource(R.drawable.circle);
@@ -507,12 +490,10 @@ public class Emp_info extends Fragment {
                     work_create.setVisibility(View.INVISIBLE);
                     title.setVisibility(View.INVISIBLE);
                     upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
                     editText.setVisibility(View.INVISIBLE);
 
                     title.setVisibility(View.INVISIBLE);
                     upb.setVisibility(View.INVISIBLE);
-                    uploadb.setVisibility(View.INVISIBLE);
                     editText.setVisibility(View.INVISIBLE);
                     loginout.setBackgroundResource(R.drawable.circlered);
                     loginout.setText("LOGGED\nOUT");
@@ -682,7 +663,6 @@ public class Emp_info extends Fragment {
 //            tv.setBackgroundResource(R.mipmap.logout);
             flag = 0;
             upb.setVisibility(View.INVISIBLE);
-            uploadb.setVisibility(View.INVISIBLE);
             editText.setVisibility(View.INVISIBLE);
             linearLayout.setBackgroundResource(R.drawable.loggedout1);
 
@@ -715,7 +695,6 @@ public class Emp_info extends Fragment {
 //                    tv.setBackgroundResource(R.mipmap.login);
 //                    flag=1;
 //                    upb.setVisibility(View.VISIBLE);
-//                    uploadb.setVisibility(View.VISIBLE);
 //                    editText.setVisibility(View.VISIBLE);
 //                }
 //            });

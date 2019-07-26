@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".Employee_Main"
+    tools:context=".Emp_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -111,16 +111,16 @@
 
 
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="extras"
-            android:textSize="30dp"
-            android:background="#3517"
-            android:layout_marginVertical="20dp"
-            android:layout_marginHorizontal="50dp"
-            android:id="@+id/upload_for_extras"
-            android:layout_below="@id/ll1"/>
+        <!--<Button-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="extras"-->
+            <!--android:textSize="30dp"-->
+            <!--android:background="#3517"-->
+            <!--android:layout_marginVertical="20dp"-->
+            <!--android:layout_marginHorizontal="50dp"-->
+            <!--android:id="@+id/upload_for_extras"-->
+            <!--android:layout_below="@id/ll1"/>-->
 
 
 
@@ -129,35 +129,35 @@
 
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/upload_for_extras"
-            android:id="@+id/ll2"
-            android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/upload_for_extras"-->
+            <!--android:id="@+id/ll2"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp">-->
 
-            <EditText
-                android:id="@+id/obname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:hint="Title"
-                android:padding="10dp"
-                android:background="#FFFFFF"/>
+            <!--<EditText-->
+                <!--android:id="@+id/obname"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:hint="Title"-->
+                <!--android:padding="10dp"-->
+                <!--android:background="#FFFFFF"/>-->
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="4"
-                android:padding="10dp"
-                android:id="@+id/ob_upload"
-                android:background="@drawable/ic_file_upload_black_24dp"
-                />
-        </LinearLayout>
+            <!--<Button-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:layout_weight="4"-->
+                <!--android:padding="10dp"-->
+                <!--android:id="@+id/ob_upload"-->
+                <!--android:background="@drawable/ic_file_upload_black_24dp"-->
+                <!--/>-->
+        <!--</LinearLayout>-->
 
     </RelativeLayout>
 

@@ -83,7 +83,7 @@ public class ServiceClass extends Service {
         requestQueue= Volley.newRequestQueue(this);
         System.out.println("yeah srvicing");
 
-        if(Employee_Main.SERVICE_RUN) {
+        if(Emp_info.SERVICE_RUN) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -132,7 +132,7 @@ public class ServiceClass extends Service {
                         Bundle b = new Bundle();
                         b.putString("lat", lattitude);
                         b.putString("lng", longitude);
-                        rr.send(Employee_Main.RESULT_CODE, b);
+                        rr.send(Emp_info.RESULT_CODE, b);
                     } else {
                         t.cancel();
                         t.purge();
@@ -175,7 +175,7 @@ public class ServiceClass extends Service {
         requestQueue= Volley.newRequestQueue(this);
         System.out.println("yeah srvicing");
 
-        if(Employee_Main.SERVICE_RUN) {
+        if(Emp_info.SERVICE_RUN) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -213,7 +213,7 @@ public class ServiceClass extends Service {
             public void run() {
                 System.out.println("\n\n\n\n\n\n\n\nhere its timer\n\n\n\n\n\n\n\n\n\n\n\n");
 
-                if(Employee_Main.SERVICE_RUN) {
+                if(Emp_info.SERVICE_RUN) {
                     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     id = intent.getStringExtra("ID");
                     rr = intent.getParcelableExtra("receiver");
@@ -223,7 +223,7 @@ public class ServiceClass extends Service {
                     Bundle b = new Bundle();
                     b.putString("lat", lattitude);
                     b.putString("lng", longitude);
-                    rr.send(Employee_Main.RESULT_CODE, b);
+                    rr.send(Emp_info.RESULT_CODE, b);
                 }
                 else
                 {
