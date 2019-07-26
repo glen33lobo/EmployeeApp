@@ -89,10 +89,8 @@ public class UMainActivity extends AppCompatActivity {
 //initial part
         Bundle bundle = getIntent().getExtras();
         String trid = bundle.getString("id");
-//            String trid=getIntent().getExtras().getString("id");
             Toast.makeText(this, "id" +trid, Toast.LENGTH_SHORT).show();
 
-//            Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
 
 
         //initial part
@@ -102,18 +100,18 @@ public class UMainActivity extends AppCompatActivity {
 
     }
     private void sendFile() {
-        String url="https://yellowapp.000webhostapp.com/sendimage/savefile.php";
+        String url="http://www.thantrajna.com/sjec_task/upload_files/upload1.php";
         StringRequest stringRequest=new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(UMainActivity.this, ""+response, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UMainActivity.this, "res:"+response, Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(UMainActivity.this, ""+error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UMainActivity.this, "er:"+error, Toast.LENGTH_SHORT).show();
                     }
                 }){
             @Override
@@ -121,7 +119,6 @@ public class UMainActivity extends AppCompatActivity {
                 Map<String,String> params=new HashMap<String, String>();
                 params.put("file",sendfiledata);
                 params.put("name",name);
-
                 return params;
             }
         };
@@ -138,24 +135,25 @@ public class UMainActivity extends AppCompatActivity {
 
     //volley code to send image
     private void sendTheData() {
-        String url="http://www.thantrajna.com/sjec_task/public_html/sjec_task/upload_files/upload1.php";
+        String url="http://www.thantrajna.com/sjec_task/upload_files/upload1.php";
         StringRequest stringRequest=new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(UMainActivity.this, ""+response, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UMainActivity.this, " res:"+response, Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(UMainActivity.this, ""+error, Toast.LENGTH_SHORT).show();
+                        System.out.println(error.toString());
+                        Toast.makeText(UMainActivity.this, "er:"+error, Toast.LENGTH_SHORT).show();
                     }
                 }){
             @Override
             protected Map<String,String> getParams()throws AuthFailureError {
                 Map<String,String> params=new HashMap<String, String>();
-                params.put("image",senddata);
+                params.put("file",senddata);
                 params.put("name",name);
 
                 return params;
